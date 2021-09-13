@@ -1,6 +1,5 @@
 import express from "express";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
 import cors from "cors";
 
 import { username, password } from "./credentials.js";
@@ -9,9 +8,8 @@ import clubRouter from "./routes/clubs.js";
 
 const app = express();
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json()) 
-app.use(express.static('public'));
+app.use(express.json({ limit: "30mb", extended: true })) 
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/club", clubRouter);
