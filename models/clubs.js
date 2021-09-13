@@ -10,7 +10,7 @@ const clubSchema = mongoose.Schema({
     },
     description: String,
     achievements: [String],
-    eventids: [{ type: mongoose.Schema().Type.ObjectId, ref: "eventModel"}],
+    eventids: [{ type: ObjectId, ref: 'eventModel'}],
     memberids: [studentSchema],
     presidentid: studentSchema,
     typeofclub: {
