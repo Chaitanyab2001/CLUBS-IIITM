@@ -30,35 +30,25 @@ export const postEvent = async (req,res) => {
 };
 
 export const putEvent = async (req,res) => {
-
-    const body = req.body;
-    const newevent = new eventModel(body);
-    console.log(body);
-
     try {
-        await newevent.save();
+        await eventModel.updateOne({name:req.body.name},req.body);
         res.setHeader("ContentType", "application/json");
-        res.status(201).json(newevent);
+        res.status(201).json(req.body);
         
     } catch (error) {
         res.setHeader("ContentType", "application/json");
-        res.status(error.status).json({ message: error.message });        
+        res.status(error.status).json({ message: error.message });
     }
 };
 
 export const delEvent = async (req,res) => {
-
-    const body = req.body;
-    const newevent = new eventModel(body);
-    console.log(body);
-
     try {
-        await newevent.save();
+        await eventModel.deleteOne(req.body);
         res.setHeader("ContentType", "application/json");
-        res.status(201).json(newevent);
+        res.status(201).json(req.body);
         
     } catch (error) {
         res.setHeader("ContentType", "application/json");
-        res.status(error.status).json({ message: error.message });        
+        res.status(error.status).json({ message: error.message });
     }
 };
