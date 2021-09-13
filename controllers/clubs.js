@@ -13,8 +13,9 @@ export const getClubs = async (req,res) => {
 
 export const createClub = async (req,res) => {
 
-    const body = res.body;
+    const body = req.body;
     const newClub = new clubModel(body);
+    console.log(body);
 
     try {
         await newClub.save();
