@@ -31,7 +31,7 @@ export const postEvent = async (req,res) => {
 
 export const putEvent = async (req,res) => {
     try {
-        await eventModel.updateOne({name:req.body.name},req.body);
+        await eventModel.updateOne({_id:req.body._id},req.body);
         res.setHeader("ContentType", "application/json");
         res.status(201).json(req.body);
         
