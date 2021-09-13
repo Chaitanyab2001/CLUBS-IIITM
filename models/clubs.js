@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import eventModel from "./events.js"
+
 const clubSchema = mongoose.Schema({
     
     name: {
@@ -8,7 +10,7 @@ const clubSchema = mongoose.Schema({
     },
     description: String,
     achievements: [String],
-    eventids: [eventSchema],
+    eventids: [{ type: mongoose.Schema().Type.ObjectId, ref: "eventModel"}],
     memberids: [studentSchema],
     presidentid: studentSchema,
     typeofclub: {
