@@ -20,7 +20,7 @@ export const postEvent = async (req,res) => {
     try {
         await newevent.save();
         res.setHeader("ContentType", "application/json");
-        res.status(201).json(newevent);
+        res.status(200).json(newevent);
         
     } catch (error) {
         res.setHeader("ContentType", "application/json");
@@ -31,9 +31,9 @@ export const postEvent = async (req,res) => {
 
 export const putEvent = async (req,res) => {
     try {
-        await eventModel.updateOne({_id:req.body._id},req.body);
+        await eventModel.updateOne({ _id: req.body._id }, req.body);
         res.setHeader("ContentType", "application/json");
-        res.status(201).json(req.body);
+        res.status(200).json(await eventModel.findOne(req.body));
         
     } catch (error) {
         res.setHeader("ContentType", "application/json");
@@ -45,7 +45,7 @@ export const delEvent = async (req,res) => {
     try {
         await eventModel.deleteOne(req.body);
         res.setHeader("ContentType", "application/json");
-        res.status(201).json(req.body);
+        res.status(200).json(req.body);
         
     } catch (error) {
         res.setHeader("ContentType", "application/json");
