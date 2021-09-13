@@ -6,13 +6,11 @@ const eventSchema = mongoose.Schema({
         type: String,
         unique: true
     },
-    time: String,
-    date: String,
-    link: {
+    date: Date,
+    meetlink: {
         type: String,
         unique: true
     },
-    clubId: Number,
     description: String,
 });
 
