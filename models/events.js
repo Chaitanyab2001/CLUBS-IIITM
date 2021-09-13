@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const Schema = mongoose.Schema;
+
 const eventSchema = mongoose.Schema({
     name: {
         type: String,
@@ -11,6 +13,10 @@ const eventSchema = mongoose.Schema({
         unique: true
     },
     description: String,
+    club: {
+        type: Schema.Types.ObjectId,
+        ref: "clubModel"
+    }
 
 });
 

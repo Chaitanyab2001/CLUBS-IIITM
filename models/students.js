@@ -23,10 +23,7 @@ const studentSchema = mongoose.Schema({
         type: String,
         default: ""
     },
-    branch: {
-        enum: ["BCS", "IMT", "IMG", "MBA", "MTCN", "MTVLSI", "MTIS", null],
-        default: null
-    },
+    branch: String,
     year: {
         type: Number,
         minimum: 1,
@@ -35,6 +32,6 @@ const studentSchema = mongoose.Schema({
 
 });
 
-const studentModel = mongoose.Model("studentModel", studentSchema);
+const studentModel = mongoose.model("studentModel", studentSchema);
 
 export default studentModel;
