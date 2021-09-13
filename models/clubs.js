@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import eventModel from "./events.js"
+const Schema = mongoose.Schema;
 
 const clubSchema = mongoose.Schema({
     
@@ -10,15 +10,21 @@ const clubSchema = mongoose.Schema({
     },
     description: String,
     achievements: [String],
-    eventids: [{ type: ObjectId, ref: 'eventModel'}],
-    memberids: [studentSchema],
-    presidentid: studentSchema,
-    typeofclub: {
-        enum: ["Technical", "Cultural"],
-        default: "Technical"
-    }
+    eventids: [{
+        type: Schema.Types.ObjectId,
+        ref: "eventModel"
+    }],
+    memberids:  [{
+        type: Schema.Types.ObjectId,
+        ref: "studentModel"
+    }],
+    presidentid: {
+        type: Schema.Types.ObjectId,
+        ref: "studentModel"
+    },
+    typeofclub: String
 });
 
-const clubModel = mongoose.Model("clubModel", clubSchema);
+const clubModel = mongoose.model("clubModel", clubSchema);
 
 export default clubModel;
