@@ -24,7 +24,7 @@ app.use(express.json({ limit: "30mb", extended: true }))
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(session({
-    secret: 'Our little secret.',
+    secret: process.env.secret,
     resave: false,
     saveUninitialized: false,
   }));
@@ -66,6 +66,7 @@ passport.serializeUser(function(user, done) {
     });
   });
 
+  
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID ,
     clientSecret: process.env.CLIENT_SECRET,
@@ -73,7 +74,7 @@ passport.use(new GoogleStrategy({
     userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
   },
   function(accessToken, refreshToken, profile, cb) {
-      console.log(profile);
+      // console.log(profile.emails[0].value);
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return cb(err, user);
     });
@@ -81,7 +82,9 @@ passport.use(new GoogleStrategy({
 ));
 
 app.get("/auth/google",
-  passport.authenticate('google', { scope: ["profile"] }));
+  passport.authenticate('google', { scope: ["profile"] ,
+  scope:["email"]
+}));
 
 app.get("/auth/google/club", 
   passport.authenticate('google', { failureRedirect: '/login' }),
