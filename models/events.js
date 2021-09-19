@@ -12,12 +12,7 @@ const eventSchema = mongoose.Schema({
         type: String,
         unique: true
     },
-    description: String,
-    club: {
-        type: Schema.Types.ObjectId,
-        ref: "clubModel"
-    }
-
+    description: String
 });
 
 const eventModel = mongoose.model("eventModel", eventSchema);
