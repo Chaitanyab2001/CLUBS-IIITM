@@ -13,15 +13,17 @@ router.get('/', async function(req,res,next) {
     {
         if(Object.prototype.toString.call(clubs) === "[object Error]")
         {
-            res.status(clubs.status).send(clubs);
-            if((clubs.status) >= 500)
-            next(clubs);
+            if((clubs.status) < 500)
+            res.status(clubs.status).send(clubs.message);
+            else
+            next(clubs.message);
         }
         else
         {
-            res.status(recentevents.status).send(recentevents);
-            if((recentevents.status) >= 500)
-            next(recentevents);
+            if((recentevents.status) < 500)
+            res.status(recentevents.status).send(recentevents.message);
+            else
+            next(recentevents.message);
         }
     }
     else

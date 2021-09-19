@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import clubModel from "../models/clubs.js";
 import eventModel from "../models/events.js";
 
 export const getEvent = async (req,res) => {
@@ -41,12 +42,27 @@ export const getEvents = async (req,res) => {
 
 export const postEvent = async (req,res) => {
 
+    const { clubId } = req.params;
+    
+    if(!mongoose.Types.ObjectId.isValid(clubId))
+    {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err; 
+    }
+
     const body = req.body;
     const newevent = new eventModel(body);
 
     try {
         await newevent.save();
-        return newevent;
+        try {
+            await clubModel.findOneAndUpdate({ _id: clubId }, { $push: { eventids: newevent._id } });
+            return newevent;
+            
+        } catch (error) {
+            return error;            
+        }
         
     } catch (error) {
         return error;     
