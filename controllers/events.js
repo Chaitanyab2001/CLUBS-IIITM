@@ -1,10 +1,30 @@
+import mongoose from "mongoose";
 import eventModel from "../models/events.js";
 
 export const getEvent = async (req,res) => {
 
+    const { eventId: _id } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(_id))
+    {
+        var err = new Error("The Event doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
+    try {
+        const event = await eventModel.findOne({ _id: _id});
+        return event;
+        
+    } catch (error) {
+        return error;
+    }
+
 };
 
 export const getRecentEvents = async (req,res) => {
+
+
 
 };
 

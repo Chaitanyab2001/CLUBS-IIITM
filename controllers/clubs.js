@@ -1,19 +1,22 @@
-import clubModel from "../models/clubs.js";
 import mongoose from "mongoose";
+import clubModel from "../models/clubs.js";
 
 export const getClub = async (req,res) => {
 
-    const { id: _id } = req.params;
+    const { clubId: _id } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(_id))
     {
         var err = new Error("Club not found.");
-        err.status = 506;
+        err.status = 406;
         return err;
     }
 
     try {
-        const club = await clubModel.findOne({ _id: _id});
+        const club = await clubModel.findOne({ _id: _id})
+                                    .populate("presidentid", "name")
+                                    .populate("eventids", "name")
+                                    .populate("memberids", "name");
         return club;
         
     } catch (error) {
