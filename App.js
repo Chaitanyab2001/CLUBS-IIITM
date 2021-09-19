@@ -10,10 +10,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { username, password } from "./credentials.js";
 
-import clubRouter from "./routes/clubs.js";
-import eventRouter from "./routes/events.js";
-import studentRouter from "./routes/students.js";
-
+import homeRoute from "./routes/home.js";
 
 const GoogleStrategy = Googlepassport.Strategy;
 const app = express();
@@ -31,9 +28,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/club", clubRouter);
-app.use("/event", eventRouter);
-app.use("/student", studentRouter);
+app.use("/home", homeRoute);
 
 const CONNECTION_URL = `mongodb+srv://${username}:${password}@clubsiiitm.awqoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const PORT = process.env.PORT || 5000;
