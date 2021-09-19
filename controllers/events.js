@@ -1,6 +1,14 @@
 import eventModel from "../models/events.js";
 
 export const getEvent = async (req,res) => {
+
+};
+
+export const getRecentEvents = async (req,res) => {
+
+};
+
+export const getEvents = async (req,res) => {
     try {
         const events = await eventModel.find();
         return events;
@@ -50,7 +58,7 @@ export const putEvent = async (req,res) => {
     else
     {
         var err = new Error("The Event doesn't exsist.");
-        err.status(406);
+        err.code(406);
         return err;
     }
 };
@@ -80,7 +88,7 @@ export const delEvent = async (req,res) => {
     else
     {
         var err = new Error("The Event doesn't exsist.");
-        err.status(406);
+        err.code(406);
         return err;
     }
 };

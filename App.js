@@ -11,6 +11,7 @@ dotenv.config();
 import { username, password } from "./credentials.js";
 
 import homeRoute from "./routes/home.js";
+import clubRoute from "./routes/club.js";
 
 const GoogleStrategy = Googlepassport.Strategy;
 const app = express();
@@ -29,6 +30,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/home", homeRoute);
+app.use("/club",clubRoute);
 
 const CONNECTION_URL = `mongodb+srv://${username}:${password}@clubsiiitm.awqoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const PORT = process.env.PORT || 5000;
