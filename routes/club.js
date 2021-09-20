@@ -15,8 +15,11 @@ router.get("/:clubId", async function(req,res,next) {
         else
         next(club.message);
     }
+    else
+    {
         res.setHeader("ContentType", "application/json");
         res.status(200).json(club);
+    }
 });
 
 router.post("/:clubId/event", async function(req,res,next) {
