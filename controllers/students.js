@@ -11,8 +11,14 @@ export const renderNewForm = async (req, res) => {
 }
 
 export const createStudent = async (req, res, next) => {
-    const student = new studentModel(req.body);
-    await student.save();
+    try {
+        const student = new studentModel(req.body);
+        await student.save();
+        res.json(student);
+        
+    } catch (error) {
+        res.send(error.message);
+    }
 }
 
 export const showStudent = async (req, res) => {

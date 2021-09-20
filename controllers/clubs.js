@@ -12,8 +12,10 @@ export const getClub = async (req, res) => {
     }
 
     try {
-        const club = await clubModel.findOne({ _id: clubId }).populate("presidentid", "name")
-                                                             .populate("eventids", "name");
+        const club = await clubModel.findOne({ _id: clubId })
+                                    .populate("memberids")
+                                    .populate("presidentid", "name")
+                                    .populate("eventids", "name");
         return club;
 
     } catch (error) {
@@ -22,9 +24,22 @@ export const getClub = async (req, res) => {
 
 };
 
-export const getClubs = async (req, res) => {
+export const getTechClubs = async (req, res) => {
+
     try {
-        const clubs = await clubModel.find();
+        const clubs = await clubModel.find({ typeofclub: "Technical" });
+        return clubs;
+
+    } catch (error) {
+        return error;
+    }
+
+};
+
+export const getCultClubs = async (req, res) => {
+
+    try {
+        const clubs = await clubModel.find({ typeofclub: "Cultural" });
         return clubs;
 
     } catch (error) {
