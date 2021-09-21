@@ -1,6 +1,6 @@
 import express from "express";
 import { getTechClubs, getCultClubs } from "../controllers/clubs.js";
-import { getUpcomingEvents } from "../controllers/events.js";
+import { getEvent, getUpcomingEvents } from "../controllers/events.js";
 import { createStudent, index } from "../controllers/students.js";
 
 const router = express.Router();

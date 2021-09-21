@@ -4,9 +4,9 @@ import eventModel from "../models/events.js";
 
 export const getEvent = async (req,res) => {
 
-    const { eventId: _id } = req.params;
+    const { eventId } = req.params;
 
-    if(!mongoose.Types.ObjectId.isValid(_id))
+    if(!mongoose.Types.ObjectId.isValid(eventId))
     {
         var err = new Error("The Event doesn't exsist.");
         err.status = 406;
@@ -14,7 +14,7 @@ export const getEvent = async (req,res) => {
     }
 
     try {
-        const event = await eventModel.findOne({ _id: _id});
+        const event = await eventModel.findOne({ _id: eventId});
         return event;
         
     } catch (error) {
