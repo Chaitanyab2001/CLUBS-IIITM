@@ -18,14 +18,26 @@ export const getEvent = async (req,res) => {
         return event;
         
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
     }
 
 };
 
-export const getRecentEvents = async (req,res) => {
+export const getUpcomingEvents = async (req,res) => {
 
-
+    try {
+        const events = await eventModel.find();
+        const comp = new Date().getTime();
+        const comtime = 604800000;
+        var recentevents = [];
+        events.map((event) => { if(Math.abs(comp-(event.date).getTime()) <= comtime && (comp-(event.date).getTime()) <= 0) recentevents.push(event); });
+        return recentevents;
+        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;
+    }
 
 };
 
@@ -35,6 +47,7 @@ export const getEvents = async (req,res) => {
         return events;
         
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -61,10 +74,13 @@ export const postEvent = async (req,res) => {
             return newevent;
             
         } catch (error) {
+            error.status = 400;
+            error.message = "The club doesn't exsist.";
             return error;            
         }
         
     } catch (error) {
+        error.message = "Meetlink or Event name already exsists";
         return error;     
     }
 
@@ -77,6 +93,7 @@ export const putEvent = async (req,res) => {
         event = await eventModel.findOne({ _id: req.body._id});
         
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;   
 
     }
@@ -88,6 +105,7 @@ export const putEvent = async (req,res) => {
             return (await eventModel.findOne(req.body));
         
         } catch (error) {
+            error.message = "Meetlink or Event name already exsists";
             return error;
         }
     }

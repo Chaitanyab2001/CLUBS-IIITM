@@ -13,10 +13,8 @@ const studentSchema = mongoose.Schema({
     },
     phoneno: {
         type: Number,
-        unique: true,
         minimum: 1000000000,
         maximum: 9999999999,
-        required: true
     },
     linkedin: {
         type: String,

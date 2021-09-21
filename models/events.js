@@ -3,9 +3,13 @@ import mongoose from "mongoose";
 const eventSchema = mongoose.Schema({
     name: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
-    date: Date,
+    date: {
+        type: Date,
+        required: true
+    },
     meetlink: {
         type: String,
         unique: true

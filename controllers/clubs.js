@@ -13,12 +13,13 @@ export const getClub = async (req, res) => {
 
     try {
         const club = await clubModel.findOne({ _id: clubId })
-                                    .populate("memberids")
+                                    .populate("memberids", "name")
                                     .populate("presidentid", "name")
                                     .populate("eventids", "name");
         return club;
 
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -31,6 +32,7 @@ export const getTechClubs = async (req, res) => {
         return clubs;
 
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -43,6 +45,7 @@ export const getCultClubs = async (req, res) => {
         return clubs;
 
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -58,6 +61,8 @@ export const postClub = async (req, res) => {
         return newClub;
 
     } catch (error) {
+        error.status = 400;
+        error.message = "The club name already exsist.";
         return error;
     }
 
@@ -73,6 +78,7 @@ export const putClub = async (req, res) => {
         club = await clubModel.findOne({ _id: body._id });
 
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
 
     }
@@ -83,6 +89,8 @@ export const putClub = async (req, res) => {
             return (await clubModel.findOne(body));
 
         } catch (error) {
+            error.status = 400;
+            error.message = "The club name already exsist.";
             return error;
         }
     }
@@ -102,6 +110,7 @@ export const delClub = async (req, res) => {
         club = await clubModel.findOne({ _id: body._id });
 
     } catch (error) {
+        error.message = "Unable to connect with database.";
         return error;
 
     }
@@ -112,6 +121,7 @@ export const delClub = async (req, res) => {
             return body;
 
         } catch (error) {
+            error.message = "Unable to connect with database.";
             return error;
         }
     }
