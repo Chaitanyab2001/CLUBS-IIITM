@@ -11,28 +11,16 @@ export const studentSchema = mongoose.Schema({
         unique: true,
         required: true
     },
-    phoneno: {
-        type: Number,
-        minimum: 1000000000,
-        maximum: 9999999999,
-    },
-    linkedin: {
-        type: String,
-        default: ""
-    },
-    bio: {
-        type: String,
-        default: ""
-    },
-    branch: {
-        type: String
-    },
+    phoneno: Number,
+    linkedin: String,
+    bio: String,
+    branch: String,
     year: {
         type: Number,
         minimum: 1,
         maximum: 5
     },
-    googleId:String
+    googleId: String
 
 });
 
