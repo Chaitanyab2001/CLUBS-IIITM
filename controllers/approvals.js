@@ -24,6 +24,29 @@ export const getApproval = async (req,res) => {
     }
 };
 
+export const getDecline = async (req,res) => {
+
+    // const { _id: _id } = req.params;
+
+    // if(!mongoose.Types.ObjectId.isValid(_id))
+    // {
+    //     var err = new Error("The Event doesn't exsist.");
+    //     err.status = 406;
+    //     return err;
+    // }
+
+    try {
+        await approvalModel.updateOne({ _id: req.body._id }, {declined:true})
+        const decline = await approvalModel.findOne({ _id: req.body._id});
+        // res.json(approve);
+        return decline;
+        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;
+    }
+};
+
 
 export const postApproval = async (req,res) => {
 
