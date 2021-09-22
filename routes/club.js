@@ -2,7 +2,7 @@ import express from "express";
 import nodemailer from 'nodemailer';
 import { getClub, postClub } from "../controllers/clubs.js";
 import { postEvent } from "../controllers/events.js";
-import { getApproval , postApproval , getApprovalRequest} from "../controllers/approvals.js";
+import { getApproval , getDecline , postApproval , getApprovalRequest} from "../controllers/approvals.js";
 import {usern, passw} from "../credentials.js"
 
 const router = express.Router();
@@ -148,6 +148,38 @@ router.get("/:clubId/approval/:approvalId/approved", async function (req, res, n
             to: 'jayraykhere@gmail.com',
             subject: 'Approval message',
             text: 'Congratulations, you are approved.'
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    }
+
+});
+
+router.get("/:clubId/approval/:approvalId/declined", async function (req, res, next) {
+
+    const decline = await getDecline(req, res);
+
+    if (Object.prototype.toString.call(decline) === "[object Error]") {
+        if ((decline.status) < 500)
+            res.status(decline.status).send(decline.message);
+        else
+            next(decline.message);
+    }
+    else {
+        res.setHeader("ContentType", "application/json");
+        res.status(200).json(decline);
+
+        let mailOptions = {
+            from: usern,
+            to: 'jayraykhere@gmail.com',
+            subject: 'Declined message',
+            text: 'you are declined.'
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
