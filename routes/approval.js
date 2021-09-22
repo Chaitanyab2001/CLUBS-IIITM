@@ -1,45 +1,76 @@
 import express from "express";
-import nodemailer from 'nodemailer';
-import { getApproval , postApproval , getApprovalRequest} from "../controllers/approvals.js";
-import {usern, passw} from "../credentials.js"
+import nodemailer from "nodemailer";
+import approvalModel from "../models/approvals.js";
+import { approveApproval, declineApproval } from "../controllers/approvals.js";
+import { usern, passw } from "../credentials.js"
 
 const router = express.Router();
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: usern,
+        pass: passw
+    }
+});
+
+
 router.get("/:approvalId/approve", async function (req, res, next) {
 
-    const approve = await getApproval(req, res);
+    const approve = await approveApproval(req, res);
 
-    if (Object.prototype.toString.call(approve) === "[object Error]") {
+    if (Object.prototype.toString.call(approve) === "[object Error]") 
+    {
         if ((approve.status) < 500)
-            res.status(approve.status).send(approve.message);
+        res.status(approve.status).send(approve.message);
         else
-            next(approve.message);
+        next(approve.message);
     }
-    else {
+    else 
+    {
         res.setHeader("ContentType", "application/json");
-        res.status(200).json(approve);
+        res.status(200).json({ message: "The approval approved successfully."});
 
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: usern,
-                pass: passw
-            }
-        });
-
-        var mailOptions = {
+        var mailOptions =  
+        {
             from: usern,
-            to: 'jayraykhere@gmail.com',
-            subject: 'Approval message',
-            text: 'Congratulations, you are approved.'
+            to: approve.studentid.email,
+            subject: `WELCOME to ${approve.clubid.name} Club`,
+            text: `Congratulations ${approve.studentid.name}, your approval for joining the ${approve.clubid.name} Club is approved.`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
+            next(error);
+        });
+    }
+
+});
+
+router.get("/:approvalId/decline", async function (req, res, next) {
+
+    const decline = await declineApproval(req, res);
+
+    if (Object.prototype.toString.call(decline) === "[object Error]") {
+
+        if ((decline.status) < 500)
+        res.status(decline.status).send(decline.message);
+        else
+        next(decline.message);
+    }
+    else 
+    {
+        res.setHeader("ContentType", "application/json");
+        res.status(200).json({ message: "The Approval declined Successfully."});
+
+        var mailOptions = {
+            from: usern,
+            to: decline.studentid.email,
+            subject: `Approval Declined`,
+            text: `Sorry ${decline.studentid.name}, you approval for joining the ${decline.clubid.name} Club was declined.`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            next(error);
         });
     }
 
@@ -47,7 +78,18 @@ router.get("/:approvalId/approve", async function (req, res, next) {
 
 router.get("/:approvalId/meet", async function (req, res, next) {
 
-    function makeid() {
+    res.status(200).send("Meet form will be loaded here.");
+
+});
+
+router.post("/:approvalId/meet", async function(req, res, next){
+
+    const { approvalId } = req.params;
+
+    const body = req.body;
+
+    function makeid() 
+    {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       
@@ -55,60 +97,35 @@ router.get("/:approvalId/meet", async function (req, res, next) {
           text += possible.charAt(Math.floor(Math.random() * possible.length));
       
         return text;
-      }
+    }
 
-    const meet = {
-        link:`meet.google.com/lookup/${makeid()}`,
-        time:`${Date()}`
+    const meet = `meet.google.com/lookup/${makeid()}`;
+
+    var approval;
+
+    try {
+        approval = approvalModel.findById(approvalId)
+                                .populate("studentid", ["name", "email"])
+                                .populate("clubid", "name");
+        
+    } catch (error) {
+        error.message = "Unable to access database.";
+        res.status(500).send(error.message);
+        
+    }
+
+    var mailOptions = {
+        from: usern,
+        to: approval.studentid.email,
+        bcc: req.user.email,
+        subject: "Invitation to interview",
+        text: `Dear ${approval.studentid.name},\n The president of ${approval.clubid.name} Club wants to interview you on ${body.date} at ${body.time}.\n The meet link is ${meet}.`
     };
-        res.setHeader("ContentType", "application/json");
-        res.status(200).json(meet);
 
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: usern,
-                pass: passw
-            }
-        });
-
-        var mailOptions = {
-            from: usern,
-            to: 'jayraykhere@gmail.com',
-            subject: 'Meeting for interview',
-            text: `Club head want to meet you at ${meet.time}. The meet link is ${meet.link}.`
-        };
-
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
-        });
+    transporter.sendMail(mailOptions, function (error, info) {
+        next(error);
+    });
     
-
 });
-
-router.post("/", async function(req,res,next) {
-
-    const approval = await postApproval(req,res);
-
-    if(Object.prototype.toString.call(approval) === "[object Error]")
-    {
-        if((approval.status) < 500)
-        res.status(approval.status).send(approval.message);
-        else
-        next(approval.message);
-    }
-    else
-    {
-        res.setHeader("ContentType", "application/json");
-        res.status(200).json(approval);
-    }
-
-});
-
-router.get("/", getApprovalRequest);
 
 export default router;

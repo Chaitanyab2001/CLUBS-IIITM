@@ -27,7 +27,7 @@ export const getEvent = async (req,res) => {
 export const getUpcomingEvents = async (req,res) => {
 
     try {
-        const events = await eventModel.find();
+        const events = await eventModel.find({},[ "name", "date" ]);
         const comp = new Date().getTime();
         const comtime = 604800000;
         var recentevents = [];
