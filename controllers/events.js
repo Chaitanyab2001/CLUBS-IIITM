@@ -4,6 +4,13 @@ import eventModel from "../models/events.js";
 
 export const getEvent = async (req,res) => {
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
+
     const { eventId } = req.params;
 
     if(!mongoose.Types.ObjectId.isValid(eventId))
@@ -12,6 +19,8 @@ export const getEvent = async (req,res) => {
         err.status = 406;
         return err;
     }
+
+    //Event exsistance
 
     try {
         const event = await eventModel.findOne({ _id: eventId});
@@ -41,19 +50,14 @@ export const getUpcomingEvents = async (req,res) => {
 
 };
 
-export const getEvents = async (req,res) => {
-    try {
-        const events = await eventModel.find();
-        return events;
-        
-    } catch (error) {
-        error.message = "Unable to connect with database.";
-        return error;
-    }
-
-};
-
 export const postEvent = async (req,res) => {
+
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
 
     const { clubId } = req.params;
     
@@ -64,42 +68,91 @@ export const postEvent = async (req,res) => {
         return err; 
     }
 
+    var club;
+
+    try {
+        club = await clubModel.findById(clubId);
+        
+    } catch (error) {
+        error.message("Unable to connect to database.");
+        return error;
+    }
+
     const body = req.body;
     const newevent = new eventModel(body);
 
-    try {
-        await newevent.save();
-        try {
-            await clubModel.findOneAndUpdate({ _id: clubId }, { $push: { eventids: newevent._id } });
-            return newevent;
-            
-        } catch (error) {
-            error.status = 400;
-            error.message = "The club doesn't exsist.";
-            return error;            
+    if(club != null)
+    {
+        if(club.presidentid !== req.session.passport.user)
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
         }
+        try {
+            await newevent.save();
+            try {
+                await clubModel.findOneAndUpdate({ _id: clubId }, { $push: { eventids: newevent._id } });
+                return newevent;
+            
+            } catch (error) {
+                error.status = 400;
+                error.message = "The club doesn't exsist.";
+                return error;            
+            }
         
-    } catch (error) {
-        error.message = "Meetlink or Event name already exsists";
-        return error;     
+        } catch (error) {
+            error.message = "Meetlink or Event name already exsists";
+            return error;     
+        }
+    }
+    else
+    {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err;
     }
 
 };
 
 export const putEvent = async (req,res) => {
-    var event;
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
+    
+    const { eventId } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(eventId))
+    {
+        var err = new Error("The Event doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
+    var event;
+    
     try {
-        event = await eventModel.findOne({ _id: req.body._id});
+        event = await eventModel.findOne({ _id: eventId })
+                                .populate("clubid", "presidentid");
         
     } catch (error) {
         error.message = "Unable to connect with database.";
         return error;   
-
+        
     }
     
     if(event!=null)
     {
+        if(event.clubid.presidentid !== req.session.passport.user)
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
+        }
         try {
             await eventModel.updateOne({ _id: req.body._id }, req.body);
             return (await eventModel.findOne(req.body));
@@ -119,10 +172,27 @@ export const putEvent = async (req,res) => {
 
 export const delEvent = async (req,res) => {
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
+
+    const { eventId } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(eventId))
+    {
+        var err = new Error("The Event doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
     var event;
 
     try {
-        event = await eventModel.findOne({ _id: req.body._id});
+        event = await eventModel.findOne({ _id: eventId})
+                                .populate("clubid", "presidentid");
         
     } catch (error) {
         return error;  
@@ -131,9 +201,15 @@ export const delEvent = async (req,res) => {
     
     if(event!=null)
     {
+        if(event.clubid.presidentid !== req.session.passport.user)
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
+        }
         try {
-            await eventModel.deleteOne(req.body);
-            return req.body;
+            await eventModel.deleteOne({ _id: eventId });
+            return event;
         
         } catch (error) {
             return error;
