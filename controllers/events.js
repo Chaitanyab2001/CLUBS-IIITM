@@ -83,7 +83,7 @@ export const postEvent = async (req,res) => {
 
     if(club != null)
     {
-        if(club.presidentid !== req.session.passport.user)
+        if(club.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -147,7 +147,7 @@ export const putEvent = async (req,res) => {
     
     if(event!=null)
     {
-        if(event.clubid.presidentid !== req.session.passport.user)
+        if(event.clubid.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -201,7 +201,7 @@ export const delEvent = async (req,res) => {
     
     if(event!=null)
     {
-        if(event.clubid.presidentid !== req.session.passport.user)
+        if(event.clubid.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;

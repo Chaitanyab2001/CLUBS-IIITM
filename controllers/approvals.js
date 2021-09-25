@@ -23,7 +23,7 @@ export const approveApproval = async (req,res) => {
     var approval;
 
     try {
-        approval = await approvalModel.findOne({ _id: approvalId})
+        approval = await approvalModel.findOne({ _id: approvalId, approved: false, declined: false })
                                       .populate("clubid", "presidentid");
 
     } catch (error) {
@@ -33,7 +33,7 @@ export const approveApproval = async (req,res) => {
     
     if(approval != null)
     {
-        if(req.session.passport.user !== approval.clubid.presidentid )
+        if(req.session.passport.user != approval.clubid.presidentid )
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -46,7 +46,7 @@ export const approveApproval = async (req,res) => {
                                           .populate("studentid", [ "name", "email" ])
                                           .populate("clubid", "name");
 
-            await clubModel.findByIdAndUpdate(approval.clubid, { $push: { memberids: approval.studentid }});
+            await clubModel.findByIdAndUpdate(approval.clubid, { $push: { memberids: approval.studentid._id }});
             return approval;
         
         } catch (error) {
@@ -83,7 +83,7 @@ export const declineApproval = async (req,res) => {
     var approval;
 
     try {
-        approval = await approvalModel.findOne({ _id: approvalId})
+        approval = await approvalModel.findOne({ _id: approvalId, approved: false, declined: false })
                                       .populate("clubid", "presidentid");
 
     } catch (error) {
@@ -93,7 +93,7 @@ export const declineApproval = async (req,res) => {
     
     if(approval != null)
     {
-        if(req.session.passport.user !== approval.clubid.presidentid )
+        if(req.session.passport.user != approval.clubid.presidentid )
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -150,7 +150,7 @@ export const postApproval = async (req,res) => {
 
     }
 
-    if(club.memberids.find((member) => member === req._passport.session.user))
+    if(club.memberids.find((member) => member == req._passport.session.user))
     {
         var err = new Error("You are already member of this club.");
         err.status = 400;
@@ -222,8 +222,9 @@ export const getClubApprovals = async (req,res) => {
     
     if(club != null)
     {
-        if(req.session.passport.user !== club.presidentid )
+        if(req.session.passport.user != club.presidentid )
         {
+            console.log("here");
             return [];
         }
 
