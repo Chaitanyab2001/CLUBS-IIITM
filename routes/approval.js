@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import approvalModel from "../models/approvals.js";
 import { approveApproval, declineApproval } from "../controllers/approvals.js";
@@ -78,13 +79,74 @@ router.get("/:approvalId/decline", async function (req, res, next) {
 
 router.get("/:approvalId/meet", async function (req, res, next) {
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
+    }
+
+    const { approvalId } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(approvalId))
+    {
+        var err = new Error("The Approval doesn't exsist.");
+        err.status = 406;
+        res.status(406).send(err.message)
+        return;
+    }
+    var approval;
+
+    try {
+        approval = await approvalModel.findById(approvalId)
+                                      .populate("clubid", "presidentid");
+        
+    } catch (error) {
+        error.message = "Unable to access database.";
+        res.status(500).send(error.message);
+        return;        
+    }
+
+    if(approval == null)
+    {
+        var err = new Error("The Approval doesn't exsist.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
+    }
+    
+    if(req.session.passport.user != approval.clubid.presidentid )
+    {
+        var err = new Error("You are not president of club.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
+    }
+
     res.status(200).send("Meet form will be loaded here.");
 
 });
 
 router.post("/:approvalId/meet", async function(req, res, next){
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
+    }
+
     const { approvalId } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(approvalId))
+    {
+        var err = new Error("The Approval doesn't exsist.");
+        err.status = 406;
+        res.status(406).send(err.message)
+        return;
+    }
 
     const body = req.body;
 
@@ -104,14 +166,30 @@ router.post("/:approvalId/meet", async function(req, res, next){
     var approval;
 
     try {
-        approval = approvalModel.findById(approvalId)
+        approval = await approvalModel.findById(approvalId)
                                 .populate("studentid", ["name", "email"])
-                                .populate("clubid", "name");
+                                .populate("clubid", ["name", "presidentid"]);
         
     } catch (error) {
         error.message = "Unable to access database.";
         res.status(500).send(error.message);
-        
+        return;        
+    }
+
+    if(approval == null)
+    {
+        var err = new Error("The Approval doesn't exsist.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
+    }
+    
+    if(req.session.passport.user != approval.clubid.presidentid )
+    {
+        var err = new Error("You are not president of club.");
+        err.status = 400;
+        res.status(400).send(err.message);
+        return;
     }
 
     var mailOptions = {
@@ -119,12 +197,16 @@ router.post("/:approvalId/meet", async function(req, res, next){
         to: approval.studentid.email,
         bcc: req.user.email,
         subject: "Invitation to interview",
-        text: `Dear ${approval.studentid.name},\n The president of ${approval.clubid.name} Club wants to interview you on ${body.date} at ${body.time}.\n The meet link is ${meet}.`
+        text: `Dear ${approval.studentid.name},\nThe president of ${approval.clubid.name} Club wants to interview you on ${body.date} at ${body.time}.\nThe meet link is ${meet}.`
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
+        res.status(error.status).send(error.message);
         next(error);
+        return;
     });
+
+    res.status(200).json({ message: "Interview Scheduled Successfully for details check your mail." })
     
 });
 
