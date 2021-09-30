@@ -77,11 +77,18 @@ passport.use(new GoogleStrategy({
     studentModel.findOne({
       googleId: profile.id
     }, function (err, student) {
-      if (!student) {
+      // console.log(profile.emails[0].value.substring(11, 23));
+      if (!student && profile.emails[0].value.substring(11, 23)=="@iiitm.ac.in") {
+        var branch=profile.emails[0].value.substring(0, 3) ;
+        var rollno=profile.emails[0].value.substring(4, 8)+branch+profile.emails[0].value.substring(8, 11);
+        var batch=profile.emails[0].value.substring(4, 8);
         var student = new studentModel({
           name: profile.displayName,
           email: profile.emails[0].value,
-          googleId: profile.id
+          googleId: profile.id,
+          branch:branch,
+          rollNo:rollno,
+          batch:batch
         });
         student.save(function (err, studentModel) {
           if (err) return err;
