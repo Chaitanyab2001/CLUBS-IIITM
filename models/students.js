@@ -15,6 +15,8 @@ export const studentSchema = mongoose.Schema({
     linkedin: String,
     bio: String,
     branch: String,
+    batch: String,
+    rollNo: String,
     year: {
         type: Number,
         minimum: 1,
