@@ -165,7 +165,7 @@ export const putEvent = async (req,res) => {
     else
     {
         var err = new Error("The Event doesn't exsist.");
-        err.code(406);
+        err.status = 406;
         return err;
     }
 };
@@ -218,7 +218,7 @@ export const delEvent = async (req,res) => {
     else
     {
         var err = new Error("The Event doesn't exsist.");
-        err.code(406);
+        err.status = 406;
         return err;
     }
 };
