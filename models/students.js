@@ -17,11 +17,6 @@ export const studentSchema = mongoose.Schema({
     branch: String,
     batch: String,
     rollNo: String,
-    year: {
-        type: Number,
-        minimum: 1,
-        maximum: 5
-    },
     googleId: String
 
 });

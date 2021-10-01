@@ -20,10 +20,26 @@ export const getEvent = async (req,res) => {
         return err;
     }
 
-    //Event exsistance
+    var eventt;
+    
+    try {
+        eventt = await eventModel.findOne({ _id: eventId });
+        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        res.status(error.status).send(error.message);          
+    }
+
+    if(eventt === null)
+    {
+        var err = new Error("The Event doesn't exsist.");
+        err.status = 406;
+        res.status(error.status).send(error.message); 
+    }
 
     try {
-        const event = await eventModel.findOne({ _id: eventId});
+        const event = await eventModel.findOne({ _id: eventId})
+                                      .populate("clubid", "presidentid");
         return event;
         
     } catch (error) {
