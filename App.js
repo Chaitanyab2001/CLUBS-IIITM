@@ -21,6 +21,7 @@ import homeRoute from "./routes/home.js";
 import clubRoute from "./routes/club.js";
 import eventRoute from "./routes/event.js";
 import approvalRoute from "./routes/approval.js";
+import studentRoute from "./routes/student.js";
 
 const GoogleStrategy = Googlepassport.Strategy;
 const app = express();
@@ -46,6 +47,7 @@ app.use("/home", homeRoute);
 app.use("/club", clubRoute);
 app.use("/event", eventRoute);
 app.use("/approval",approvalRoute);
+app.use("/student", studentRoute);
 
 const CONNECTION_URL = `mongodb+srv://${username}:${password}@clubsiiitm.awqoq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const PORT = process.env.PORT || 5000;
@@ -79,7 +81,7 @@ passport.use(new GoogleStrategy({
     }, function (err, student) {
       // console.log(profile.emails[0].value.substring(11, 23));
       if (!student && profile.emails[0].value.substring(11, 23)=="@iiitm.ac.in") {
-        var branch=profile.emails[0].value.substring(0, 3) ;
+        var branch=profile.emails[0].value.substring(0, 3).toUpperCase() ;
         var rollno=profile.emails[0].value.substring(4, 8)+branch+profile.emails[0].value.substring(8, 11);
         var batch=profile.emails[0].value.substring(4, 8);
         var student = new studentModel({
@@ -105,7 +107,7 @@ app.get("/auth/google",
   }));
 
 app.get("/auth/google/club",
-  passport.authenticate('google', { failureRedirect: '/login' }),
+  passport.authenticate('google', { failureRedirect: '/home' }),
   function (req, res) {
     res.redirect('/home');
   });
