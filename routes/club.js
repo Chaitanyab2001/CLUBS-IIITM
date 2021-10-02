@@ -28,7 +28,8 @@ router.get("/:clubId", async function(req,res,next) {
     
         default:
             res.setHeader("ContentType", "application/json");
-            res.status(200).json({ club: club, approvals: approvals });
+            // res.status(200).json({ club: club, approvals: approvals });
+            res.render('club',{ club, approvals });
             break;
     }
 });
@@ -134,7 +135,7 @@ router.post("/:clubId/event", async function(req,res,next) {
 
 });
 
-router.post("/:clubId/approval", async function(req,res,next) {
+router.get("/:clubId/approval", async function(req,res,next) {
 
     const approval = await postApproval(req,res);
 
