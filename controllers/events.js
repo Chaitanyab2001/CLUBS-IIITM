@@ -52,15 +52,17 @@ export const getEvent = async (req,res) => {
 export const getUpcomingEvents = async (req,res) => {
 
     try {
-        const events = await eventModel.find({},[ "name", "date" ]);
-        const comp = new Date().getTime();
-        const comtime = 604800000;
-        var recentevents = [];
-        events.map((event) => { if(Math.abs(comp-(event.date).getTime()) <= comtime && (comp-(event.date).getTime()) <= 0) recentevents.push(event); });
-        return recentevents;
+        const comp = new Date();
+        const events = await eventModel.find()
+                                       .where("date").gt(comp)
+                                       .sort("date")
+                                       .limit(3)
+                                       .select("name");
+        
+        return events;
         
     } catch (error) {
-        error.message = "Unable to connect with database.";
+        // error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -187,6 +189,8 @@ export const putEvent = async (req,res) => {
 };
 
 export const delEvent = async (req,res) => {
+
+    // remove event from club also
 
     if(req.session.passport === undefined)
     {

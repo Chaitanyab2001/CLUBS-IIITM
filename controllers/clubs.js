@@ -149,3 +149,12 @@ export const delClub = async (req, res) => {
         return err;
     }
 };
+
+export const removeMember = async (req,res) => {
+
+    // club verification
+    // president verification
+    // member verification
+    // member removal
+    
+};
