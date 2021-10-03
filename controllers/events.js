@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
 import eventModel from "../models/events.js";
+import multer from 'multer';
 
 export const getEvent = async (req,res) => {
 
@@ -89,16 +90,24 @@ export const postEvent = async (req,res) => {
     var club;
 
     try {
-        club = await clubModel.findById(clubId);
-        
+        club = await clubModel.findById(clubId);     
     } catch (error) {
         error.message("Unable to connect to database.");
         return error;
     }
 
-    const body = req.body;
-    const newevent = new eventModel(body);
 
+    //const {path, filename} = req.files;
+    console.log(req.file);
+    // res.send("IT WORKED!!");
+    //const body = req.body;
+    const newevent = new eventModel(req.body);
+    // // if(path!=null && filename!=null)
+    // // {
+    // //     newevent.image.url = path;
+    // //     newevent.image.filename = filename;
+    // // }
+    
     if(club != null)
     {
         if(club.presidentid != req.session.passport.user)
@@ -112,7 +121,6 @@ export const postEvent = async (req,res) => {
             try {
                 await clubModel.findOneAndUpdate({ _id: clubId }, { $push: { eventids: newevent._id } });
                 return newevent;
-            
             } catch (error) {
                 error.status = 400;
                 error.message = "The club doesn't exsist.";
