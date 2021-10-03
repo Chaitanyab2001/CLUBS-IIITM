@@ -91,6 +91,8 @@ export const putStudent = async (req, res) => {
 
 export const delStudent = async (req, res) => {
 
+    // deleting from all clubs is remaining.
+
     if(req.session.passport === undefined)
     {
         var err = new Error("You are not logged in.");

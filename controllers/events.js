@@ -190,6 +190,8 @@ export const putEvent = async (req,res) => {
 
 export const delEvent = async (req,res) => {
 
+    // remove event from club also
+
     if(req.session.passport === undefined)
     {
         var err = new Error("You are not logged in.");

@@ -1,7 +1,7 @@
 import express from "express";
 import clubModel from "../models/clubs.js";
-import { getClub, postClub } from "../controllers/clubs.js";
-import { postEvent } from "../controllers/events.js";
+import { getClub, postClub, removeMember } from "../controllers/clubs.js";
+import { postEvent, putEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
 
 const router = express.Router();
@@ -134,7 +134,7 @@ router.post("/:clubId/event", async function(req,res,next) {
 
 });
 
-router.post("/:clubId/approval", async function(req,res,next) {
+router.get("/:clubId/approval", async function(req,res,next) {
 
     const approval = await postApproval(req,res);
 
@@ -149,6 +149,27 @@ router.post("/:clubId/approval", async function(req,res,next) {
     {
         res.setHeader("ContentType", "application/json");
         res.status(200).send("Your approval has been submitted successfully.");
+    }
+
+});
+
+router.get("/:clubId/remove/:studentId", async function(req,res,next) {
+
+    const member = await removeMember(req,res);
+
+    if(Object.prototype.toString.call(member) === "[object Error]")
+    {
+        if((member.status) < 500)
+        res.status(member.status).send(member.message);
+        else
+        next(member.message);
+    }
+    else
+    {
+        res.setHeader("ContentType", "application/json");
+        res.status(200).send("The member has been removed successfully.");
+
+        // mail to member.
     }
 
 });
