@@ -51,7 +51,9 @@
         <!-- Masthead Subheading-->
         <!-- {% if member %} {% if notexist %} -->
         <!-- <form action=<%= `${club.id}/approval` %> method="POST"><a method="POST" href=<%= `${club.id}/approval` %> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN<input type="approval" value="Employee1" /></a></form> -->
-        <a href="approval" class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN</a>
+        <% if(approvals.length===0) { %>
+        <a href=<%= `${club.id}/approval`%> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN</a>
+        <% } %>
         <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
     </div>
 </header>
@@ -72,7 +74,11 @@
             <!-- Portfolio Item 1-->
             <div class="col-md-12 col-lg-12 mb-5">
                 <div class="portfolio-item mx-auto" style="font-family: 'Ubuntu', sans-serif;">
-                <%= club.description %>
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                      <h1 class="display-4"><%= club.description %></h1>
+                    </blockquote>
+                </figure>
                 </div>
             </div>
         </div>
@@ -93,7 +99,7 @@
         <div class="row">
             <!-- Portfolio Item 1-->
             <div class="col-md-12 col-lg-12 mb-5">
-                <div class="portfolio-item mx-auto" style="font-family: 'Ubuntu', sans-serif;"><%= club.achievements%></div>
+                <div class="portfolio-item mx-auto" style="font-family: 'Ubuntu', sans-serif;"><h1><%= club.achievements%></h1></div>
             </div>
         </div>
     </div>
@@ -110,17 +116,21 @@
             <div class="divider-custom-line"></div>
         </div>
         <!-- Event Grid Items-->
-        <div class="row">
-            <div class="col-md-12 col-lg-12 mb-5">
-                <div class="portfolio-item mx-auto container" style="font-family: 'Ubuntu', sans-serif;">
-                    <% const obj = club.eventids;
-                        for (key in obj) { %>
-                        <br/>  <%= obj[key].name %> 
-                    <% } %>
+        <div style="display: flex; flex-direction: row;">
+            <% const obj = club.eventids;
+            for (key in obj) { %>
+                <div class="card" style="width: 18rem;margin: 5px;min-height: max-content;">
+                    <div class="card-body" style="min-height: max-content;">
+                        <img src="../public/images/rotaract.png" class="card-img-top" alt="not found" style="height:100px; width:150px">
+                        <h5 class="card-title"><%= obj[key].name %> </h5>
+                        <p class="card-text"><%= obj[key].description %></p>
+                        <a class="btn btn-primary" href= <%= obj[key].link %>>Join event</a>
+                    </div>
                 </div>
+                <!-- <br/>  <%= obj[key].name %>  -->
+                <% } %>
             </div>
         </div>
-    </div>
 </section>
 <!-- members Section-->
 <section class="page-section portfolio" id="members">
@@ -133,18 +143,23 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-
+        <ul class="list-group"></ul>
         <% const member = club.memberids;
                         for (key in member) { %>
-                        <br/>  <%= member[key].name %> 
-                    <% } %>
+                            <li class="list-group-item">
+                                    <%= member[row].name%>
+                            </li>
+        <% } %>
+
+                    
+                </ul>
 <% /* %>
         <div class="container text-center">
             <div>
                 <h1 style="font-family: 'Fondamento', cursive;">New Recruits</h1>
             </div>
-            <!-- <% if(approvals)%> -->
-            <%= approvals%>
+            <% if(approvals.length!==0) { %>
+            <!-- <%= approvals%> -->
             <div class="divider-custom">
                 <!-- <div>NO NEW APPLICANTS</div> -->
             </div>
@@ -193,13 +208,14 @@
                     
                 </tr>
             <%}%>
+            <%}%>
 
             </table>
             
         </div>
 
 <% */ %>
-
+<% /* %>
         <div class="container text-center">
             <div>
                 <h1 style="font-family: 'Fondamento', cursive;">Current Members</h1>
@@ -215,7 +231,7 @@
                         Name
                     </th>
                     <th>
-                        Email
+                        <!-- Email -->
                     </th>
                     <!-- {% if verified %} -->
                     <th>
@@ -227,9 +243,9 @@
                 <% for(row in member)
                 {%> <tr>
                     <td>
-                        <a href="/clubs/{{clubName}}/{{row.1}}">
-                            <%= member[row].name%>
-                        </a>
+                                <a href="/clubs/{{clubName}}/{{row.1}}">
+                                    <%= member[row].name%>
+                                </a>
 
                     </td>
                     <td>
@@ -238,11 +254,12 @@
                         </a> -->
                     </td>
                     <!-- {% if verified %} -->
+                    <% if(approvals.length!==0){ %>
                     <td>
-                        <!-- <a href="/clubs/{{clubName}}/remove/{{row.1}}" class="btn btn-danger btn-sm ">REMOVE</a> -->
+                        <a href="/clubs/{{clubName}}/remove/{{row.1}}" class="btn btn-danger btn-sm ">REMOVE</a>
                     </td>
                     <!-- {% endif %} -->
-
+                    <% } %>
 
                 </tr><%}
                 %>
@@ -250,6 +267,7 @@
             </table>
 
         </div>
+        <% */ %>
 </section>
 
 </div>
