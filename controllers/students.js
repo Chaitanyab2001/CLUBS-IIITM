@@ -1,4 +1,5 @@
 import studentModel from '../models/students.js';
+import mongoose from "mongoose";
 
 export const getStudent = async (req, res) => {
 

@@ -158,3 +158,59 @@ export const removeMember = async (req,res) => {
     // member removal
     
 };
+
+export const getJoinButton = async (req,res) => {
+
+    if(req.session.passport === undefined)
+    {
+        return false;
+    }
+
+    const { clubId } = req.params;
+
+    var memcheck;
+
+    try {
+        memcheck = await clubModel.find({ _id: clubId, memberids: { $elemMatch: { $eq: req.session.passport.user } } });
+        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;        
+    }
+
+    if(memcheck.length === 0)
+    {
+        return true;
+    }
+
+    return false;
+
+};
+
+export const getVerifyPresident = async (req,res) => {
+
+    if(req.session.passport === undefined)
+    {
+        return false;
+    }
+
+    const { clubId } = req.params;
+
+    var prescheck;
+
+    try {
+        prescheck = await clubModel.find({ _id: clubId, presidentid: req.session.passport.user });
+        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;        
+    }
+
+    if(prescheck.length >= 1)
+    {
+        return true;
+    }
+
+    return false;
+
+};
