@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
-import { getClub, postClub, removeMember } from "../controllers/clubs.js";
+import { getClub, postClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
 import { postEvent, putEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
 import { storage } from "../cloudinary/index.js";
@@ -10,30 +10,46 @@ import multer from 'multer';
 const router = express.Router();
 const upload = multer({ storage });
 
-router.get("/:clubId", async function (req, res, next) {
+router.get("/:clubId", async function (req,res, next) {
 
     const club = await getClub(req, res);
     const approvals = await getClubApprovals(req, res);
+    const joinbutton = await getJoinButton(req,res);
+    const verifypresident = await getVerifyPresident(req,res);
 
     switch ("[object Error]") {
         case Object.prototype.toString.call(club):
             if ((club.status) < 500)
-                res.status(club.status).send(club.message);
+            res.status(club.status).send(club.message);
             else
-                next(club.message);
+            next(club.message);
             break;
 
         case Object.prototype.toString.call(approvals):
             if ((approvals.status) < 500)
-                res.status(approvals.status).send(approvals.message);
+            res.status(approvals.status).send(approvals.message);
             else
-                next(approvals.message);
+            next(approvals.message);
+            break;
+
+        case Object.prototype.toString.call(joinbutton):
+            if ((joinbutton.status) < 500)
+            res.status(joinbutton.status).send(joinbutton.message);
+            else
+            next(joinbutton.message);
+            break;
+        
+        case Object.prototype.toString.call(verifypresident):
+            if ((verifypresident.status) < 500)
+            res.status(verifypresident.status).send(verifypresident.message);
+            else
+            next(verifypresident.message);
             break;
 
         default:
             res.setHeader("ContentType", "application/json");
-            // res.status(200).json({ club: club, approvals: approvals });
-            res.render('club',{ club, approvals });
+            // res.status(200).json({ club: club, approvals: approvals, joinbutton: joinbutton, verifypresident: verifypresident });
+            res.render('club',{ club, approvals, joinbutton, verifypresident });
             break;
     }
 });
