@@ -17,7 +17,8 @@ router.get("/:studentId/profile", async function(req,res,next){
     else
     {
         res.setHeader("ContentType", "application/json");
-        res.status(200).json(student);
+        // res.status(200).json(student);
+        res.render('student',{ student});
     }
 
 });
