@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
 import eventModel from "../models/events.js";
-import multer from 'multer';
 
 export const getEvent = async (req,res) => {
 
@@ -39,8 +38,7 @@ export const getEvent = async (req,res) => {
     }
 
     try {
-        const event = await eventModel.findOne({ _id: eventId})
-                                      .populate("clubid", "presidentid");
+        const event = await eventModel.findOne({ _id: eventId});
         return event;
         
     } catch (error) {
@@ -63,7 +61,7 @@ export const getUpcomingEvents = async (req,res) => {
         return events;
         
     } catch (error) {
-        // error.message = "Unable to connect with database.";
+        error.message = "Unable to connect with database.";
         return error;
     }
 
@@ -96,18 +94,8 @@ export const postEvent = async (req,res) => {
         return error;
     }
 
-
-    //const {path, filename} = req.files;
-    console.log(req.file);
-    // res.send("IT WORKED!!");
-    //const body = req.body;
     const newevent = new eventModel(req.body);
-    // // if(path!=null && filename!=null)
-    // // {
-    // //     newevent.image.url = path;
-    // //     newevent.image.filename = filename;
-    // // }
-    
+
     if(club != null)
     {
         if(club.presidentid != req.session.passport.user)
@@ -162,8 +150,7 @@ export const putEvent = async (req,res) => {
     var event;
     
     try {
-        event = await eventModel.findOne({ _id: eventId })
-                                .populate("clubid", "presidentid");
+        event = await eventModel.findOne({ _id: eventId });
         
     } catch (error) {
         error.message = "Unable to connect with database.";
@@ -173,7 +160,9 @@ export const putEvent = async (req,res) => {
     
     if(event!=null)
     {
-        if(event.clubid.presidentid != req.session.passport.user)
+        const club = await clubModel.findOne({ eventids: { $elemMatch: { $eq: event._id } } })
+
+        if(club.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -181,7 +170,7 @@ export const putEvent = async (req,res) => {
         }
         try {
             await eventModel.updateOne({ _id: req.body._id }, req.body);
-            return (await eventModel.findOne(req.body));
+            return await eventModel.findOne(req.body);
         
         } catch (error) {
             error.message = "Meetlink or Event name already exsists";
@@ -197,8 +186,6 @@ export const putEvent = async (req,res) => {
 };
 
 export const delEvent = async (req,res) => {
-
-    // remove event from club also
 
     if(req.session.passport === undefined)
     {
@@ -219,8 +206,7 @@ export const delEvent = async (req,res) => {
     var event;
 
     try {
-        event = await eventModel.findOne({ _id: eventId})
-                                .populate("clubid", "presidentid");
+        event = await eventModel.findOne({ _id: eventId});
         
     } catch (error) {
         return error;  
@@ -229,7 +215,9 @@ export const delEvent = async (req,res) => {
     
     if(event!=null)
     {
-        if(event.clubid.presidentid != req.session.passport.user)
+        const club = await clubModel.findOne({ eventids: { $elemMatch: { $eq: event._id } } })
+
+        if(club.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
@@ -237,6 +225,7 @@ export const delEvent = async (req,res) => {
         }
         try {
             await eventModel.deleteOne({ _id: eventId });
+            await clubModel.findByIdAndUpdate(club._id,{ $pull: { eventids: event._id } })
             return event;
         
         } catch (error) {
