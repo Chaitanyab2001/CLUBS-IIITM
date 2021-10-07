@@ -24,7 +24,7 @@ router.get("/:eventId", async function(req,res,next) {
 
 router.get("/:eventId/edit", async function(req,res,next){
 
-    const event = getEvent(req,res);
+    const event = await getEvent(req,res);
 
     if(Object.prototype.toString.call(event) === "[object Error]")
     {

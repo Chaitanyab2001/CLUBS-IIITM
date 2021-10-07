@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/:studentId/profile", async function(req,res,next){
 
-    const student = getStudent(req,res);
+    const student = await getStudent(req,res);
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
@@ -17,14 +17,15 @@ router.get("/:studentId/profile", async function(req,res,next){
     else
     {
         res.setHeader("ContentType", "application/json");
-        res.status(200).json(student);
+        // res.status(200).json(student);
+        res.render('student',{ student});
     }
 
 });
 
 router.get("/:studentId/edit", async function(req,res,next){
 
-    const student = getStudent(req,res);
+    const student = await getStudent(req,res);
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
