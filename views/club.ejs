@@ -51,7 +51,7 @@
         <!-- Masthead Subheading-->
         <!-- {% if member %} {% if notexist %} -->
         <!-- <form action=<%= `${club.id}/approval` %> method="POST"><a method="POST" href=<%= `${club.id}/approval` %> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN<input type="approval" value="Employee1" /></a></form> -->
-        <% if(approvals.length===0) { %>
+        <% if(join_button===0) { %>
         <a href=<%= `${club.id}/approval`%> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN</a>
         <% } %>
         <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
@@ -147,7 +147,7 @@
         <% const member = club.memberids;
                         for (key in member) { %>
                             <li class="list-group-item">
-                                    <%= member[row].name%>
+                                    <%= member[key].name%>
                             </li>
         <% } %>
 
@@ -158,7 +158,7 @@
             <div>
                 <h1 style="font-family: 'Fondamento', cursive;">New Recruits</h1>
             </div>
-            <% if(approvals.length!==0) { %>
+            <% if(join_button!==0) { %>
             <!-- <%= approvals%> -->
             <div class="divider-custom">
                 <!-- <div>NO NEW APPLICANTS</div> -->
@@ -254,7 +254,7 @@
                         </a> -->
                     </td>
                     <!-- {% if verified %} -->
-                    <% if(approvals.length!==0){ %>
+                    <% if(join_button!==0){ %>
                     <td>
                         <a href="/clubs/{{clubName}}/remove/{{row.1}}" class="btn btn-danger btn-sm ">REMOVE</a>
                     </td>
