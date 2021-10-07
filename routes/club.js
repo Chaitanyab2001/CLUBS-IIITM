@@ -1,8 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
-import { getClub, postClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
-import { postEvent, putEvent } from "../controllers/events.js";
+import { getClub, postClub, putClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
+import { postEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
 import { storage } from "../cloudinary/index.js";
 import multer from 'multer';
@@ -71,6 +71,51 @@ router.post("/", async function (req, res, next) {
 
 });
 
+router.get("/:clubId/edit", async function(req,res,next){
+
+    const club = await getClub(req,res);
+
+    if(Object.prototype.toString.call(club) === "[object Error]")
+    {
+        if((club.status) < 500)
+        res.status(club.status).send(club.message);
+        else
+        next(club.message);
+    }
+    else
+    {
+        if(club.presidentid != req.session.passport.user)
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            res.status(error.status).send(error.message); 
+        }
+    
+        res.setHeader("ContentType", "application/json");
+        res.status(200).json({ message: "The club edit form will render here.", club: club });
+    }
+
+});
+
+router.put("/:clubId", async function(req,res,next) {
+
+    const club = await putClub(req,res);
+
+    if(Object.prototype.toString.call(club) === "[object Error]")
+    {
+        if((club.status) < 500)
+        res.status(club.status).send(club.message);
+        else
+        next(club.message);
+    }
+    else
+    {
+        res.setHeader("ContentType", "application/json");
+        res.status(200).send("The club is updated successfully.");
+    }
+});
+
+
 router.get("/:clubId/event", async function (req, res, next) {
 
     if (req.session.passport === undefined) {
@@ -111,22 +156,6 @@ router.get("/:clubId/event", async function (req, res, next) {
 
     res.status(200).render('addEvent', { club });
     //res.status(200).send("The event creation form will render here.")
-});
-
-router.put("/:eventId", async function (req, res, next) {
-
-    const event = await putEvent(req, res);
-
-    if (Object.prototype.toString.call(event) === "[object Error]") {
-        if ((event.status) < 500)
-            res.status(event.status).send(event.message);
-        else
-            next(event.message);
-    }
-    else {
-        res.setHeader("ContentType", "application/json");
-        res.status(200).send("The event is updated successfully.");
-    }
 });
 
 router.post("/:clubId/event", upload.single("banner"), async function (req, res, next) {
