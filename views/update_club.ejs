@@ -1,0 +1,50 @@
+<head>
+    <title>
+        <%=club.name%>
+    </title>
+    <div id="page-top"></div>
+
+    <!-- Core theme CSS (includes Bootstrap) -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <%=club%>
+    
+    <div class="container mt-5 pt-5">
+        <form action=<%= `/club/${club._id}` %> method="PUT">
+            <textarea style="display: none;" rows="2" type="text" class="form-control" id="info" name="_id"><%=club._id%></textarea>
+            <div class="form-group">
+                <label for="info">New Description</label>
+                <textarea rows="2" type="text" class="form-control" id="info" name="description"><%=club.description%></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="achievements">Edit achievements</label>
+                <!-- <%=club.achievements%> -->
+                    <textarea rows="2" type="text" class="form-control" id="achievements" name="achievements"></textarea>  
+                <% for(key in club.achievements){ %>
+                    <textarea rows="2" type="text" class="form-control" id="achievements" name="achievements">
+                        <%=club.achievements[key]%>
+                    </textarea>
+                <%}%>
+            </div>
+            
+            <!-- <div class="form-group">
+                <label for="events">Edit Events</label>
+                <textarea rows="2" type="text" class="form-control" id="events" name="events">{{events}}</textarea>
+            </div> -->
+            
+            
+            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+        </div>
+        <div class="container mt-5 pt-5">
+            <button type="submit" class="btn btn-primary ">Submit</button>
+        </div>
+        
+    </form>
+</div>
+</body>
+</html>

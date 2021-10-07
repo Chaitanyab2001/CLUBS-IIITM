@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-
+<% join_button=1;%>
 <div class="collapse navbar-collapse" id="navbarResponsive">
 
     <ul class="navbar-nav ml-auto">
@@ -60,7 +60,6 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-<<<<<<< HEAD
         <!-- Masthead Subheading-->
         <!-- {% if member %} {% if notexist %} -->
         <!-- <form action=<%= `${club.id}/approval` %> method="POST"><a method="POST" href=<%= `${club.id}/approval` %> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN<input type="approval" value="Employee1" /></a></form> -->
@@ -68,12 +67,6 @@
         <a href=<%= `${club.id}/approval`%> class="btn btn-success btn-lg" style="font-family: 'Ubuntu', sans-serif;">JOIN</a>
         <% } %>
         <!-- <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p> -->
-=======
-        <% if(joinbutton) { %>
-            <a href="<%=club._id%>/approval" class="btn btn-success btn-lg"
-                style="font-family: 'Ubuntu', sans-serif;">JOIN</a>
-            <% } %>
->>>>>>> 3f90f1eeff1f7c3004a9127d331161ef39dbdb5a
     </div>
 </header>
 
@@ -179,7 +172,6 @@
             <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
             <div class="divider-custom-line"></div>
         </div>
-<<<<<<< HEAD
         <ul class="list-group"></ul>
         <% const member = club.memberids;
                         for (key in member) { %>
@@ -275,34 +267,6 @@
                         Action
                     </th>
                     <!-- {% endif %} -->
-=======
-        <ul class="list-group">
-            <% const member=club.memberids; for (key in member) { %>
-                <li class="list-group-item row">
-                    <a href="/student/<%=member[key]._id%>/profile"
-                        style="color: darkblue; font-family: 'Ubuntu', sans-serif;" class="col">
-                        <%= member[key].name%>
-                    </a>
-                    <% if(verifypresident) { %>
-                        <a class="btn btn-danger col-sm-2 offset-md-2 "
-                            href="<%=club._id%>/remove/<%=member[key]._id%>">Remove</a>
-                        <% } %>
-                </li>
-                <% } %>
-        </ul>
-    </div>
-</section>
-<section class="page-section">
-        <% if(approvals.length!==0) { %>
-                <div class="container">
-                    <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0"
-                    style="font-family: 'Kaushan Script', cursive;">New Approvals</h2>
-                    <div class="divider-custom">
-                        <div class="divider-custom-line"></div>
-                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                        <div class="divider-custom-line"></div>
-                    </div>
->>>>>>> 3f90f1eeff1f7c3004a9127d331161ef39dbdb5a
 
                 
                     <ul class="list-group">
@@ -311,7 +275,6 @@
                                 <a href="/student/<%= approvals[request].studentid._id %>/profile" class="col-xs-6 col-md-8"  style="color: darkblue; font-family: 'Ubuntu', sans-serif;">
                                     <%= approvals[request].studentid.name %>
                                 </a>
-<<<<<<< HEAD
 
                     </td>
                     <td>
@@ -320,7 +283,7 @@
                         </a> -->
                     </td>
                     <!-- {% if verified %} -->
-                    <% if(join_button!==0){ %>
+                <% if(join_button!==0){ %>
                     <td>
                         <a href="/clubs/{{clubName}}/remove/{{row.1}}" class="btn btn-danger btn-sm ">REMOVE</a>
                     </td>
@@ -334,20 +297,6 @@
 
         </div>
         <% */ %>
-=======
-                                <div class="col-xs-6 col-md-4">
-                                <a href="/approval/<%= approvals[request]._id %>/approve"
-                                    class="btn btn-success btn-sm">Approve</a>
-                                <a href="/approval/<%= approvals[request]._id %>/meet" class="btn btn-warning btn-sm">Schedule
-                                    Meet</a>
-                                <a href="/approval/<%= approvals[request]._id %>/decline" class="btn btn-danger btn-sm">Reject</a>
-                                </div>
-                            </li>
-                            <% } %>
-                    </ul>
-                </div>
-            <% } %>
->>>>>>> 3f90f1eeff1f7c3004a9127d331161ef39dbdb5a
 </section>
 
 </div>
