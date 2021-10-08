@@ -89,11 +89,16 @@ export const postClub = async (req, res) => {
 
 export const putClub = async (req, res) => {
 
+    const { clubId } = req.params;
+
+    //id verification
+    // authentication
+
     const body = req.body;
     var club;
 
     try {
-        club = await clubModel.findOne({ _id: body._id });
+        club = await clubModel.findById(clubId);
 
     } catch (error) {
         error.message = "Unable to connect with database.";
@@ -103,7 +108,7 @@ export const putClub = async (req, res) => {
 
     if (club != null) {
         try {
-            await clubModel.updateOne({ _id: body._id }, req.body);
+            await clubModel.updateOne({ _id: clubId }, body);
             return (await clubModel.findOne(body));
 
         } catch (error) {
@@ -121,11 +126,16 @@ export const putClub = async (req, res) => {
 
 export const delClub = async (req, res) => {
 
+    const { clubId } = req.params;
+
+    // id verification
+    // authentication
+
     const body = req.body;
     var club;
 
     try {
-        club = await clubModel.findOne({ _id: body._id });
+        club = await clubModel.findOne({ _id: clubId });
 
     } catch (error) {
         error.message = "Unable to connect with database.";
@@ -135,7 +145,7 @@ export const delClub = async (req, res) => {
 
     if (club != null) {
         try {
-            await clubModel.deleteOne(body);
+            await clubModel.deleteOne({ _id: clubId });
             return body;
 
         } catch (error) {
