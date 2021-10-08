@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
+import studentModel from "../models/students.js";
 
 export const getClub = async (req, res) => {
 
@@ -182,11 +183,86 @@ export const delClub = async (req, res) => {
 
 export const removeMember = async (req,res) => {
 
-    // club verification
-    // president verification
-    // member verification
-    // member removal
-    
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
+
+    const { clubId, studentId } = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(clubId))
+    {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
+    if(!mongoose.Types.ObjectId.isValid(studentId))
+    {
+        var err = new Error("The Student doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
+    var student;
+
+    try {
+        student = await studentModel.findById(studentId);        
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;           
+    }
+
+    if(student === null)
+    {
+        var err = new Error("The Student doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
+
+    var club;
+
+    try {
+        club = await clubModel.findOne({ _id: clubId });
+
+    } catch (error) {
+        error.message = "Unable to connect with database.";
+        return error;
+
+    }
+
+    if (club != null) 
+    {
+        if(req.session.passport.user != club.presidentid )
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
+        }
+
+        if(club.memberids.indexOf(student._id) === -1)
+        {
+            var err = new Error("The Student is not member of this club.")
+            err.status = 400;
+            return err;
+        }
+
+        try {
+            await clubModel.updateOne({ _id: clubId }, { $pull: { memberids: studentId }});
+            return;
+
+        } catch (error) {
+            error.message = "Unable to connect with database.";
+            return error;
+        }
+    }
+    else {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
 };
 
 export const getJoinButton = async (req,res) => {
