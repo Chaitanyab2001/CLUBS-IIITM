@@ -69,30 +69,23 @@ export const getCultClubs = async (req, res) => {
 
 };
 
-export const postClub = async (req, res) => {
-
-    const body = req.body;
-    const newClub = new clubModel(body);
-
-    try {
-        await newClub.save();
-        return newClub;
-
-    } catch (error) {
-        error.status = 400;
-        error.message = "The club name already exsist.";
-        return error;
-    }
-
-};
-
-
 export const putClub = async (req, res) => {
+
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
 
     const { clubId } = req.params;
 
-    //id verification
-    // authentication
+    if(!mongoose.Types.ObjectId.isValid(clubId))
+    {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
 
     const body = req.body;
     var club;
@@ -106,7 +99,15 @@ export const putClub = async (req, res) => {
 
     }
 
-    if (club != null) {
+    if (club != null) 
+    {
+        if(req.session.passport.user != club.presidentid )
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
+        }
+
         try {
             await clubModel.updateOne({ _id: clubId }, body);
             return (await clubModel.findOne(body));
@@ -126,10 +127,21 @@ export const putClub = async (req, res) => {
 
 export const delClub = async (req, res) => {
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return err;
+    }
+
     const { clubId } = req.params;
 
-    // id verification
-    // authentication
+    if(!mongoose.Types.ObjectId.isValid(clubId))
+    {
+        var err = new Error("The Club doesn't exsist.");
+        err.status = 406;
+        return err;
+    }
 
     const body = req.body;
     var club;
@@ -143,7 +155,15 @@ export const delClub = async (req, res) => {
 
     }
 
-    if (club != null) {
+    if (club != null) 
+    {
+        if(req.session.passport.user != club.presidentid )
+        {
+            var err = new Error("You are not president of club.");
+            err.status = 400;
+            return err;
+        }
+
         try {
             await clubModel.deleteOne({ _id: clubId });
             return body;
