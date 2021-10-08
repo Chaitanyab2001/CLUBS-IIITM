@@ -12,7 +12,11 @@
 	cursor: pointer;
 	border-radius: 8px
 }
+.form-label {
 
+    display: block !important;
+
+}
 :root {
 	--blue: #007bff;
 	--indigo: #6610f2;

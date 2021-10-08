@@ -44,12 +44,13 @@ router.get("/:studentId/edit", async function(req,res,next){
         }
     
         res.setHeader("ContentType", "application/json");
-        res.status(200).json({ message: "The student edit form will render here.", student: student });
+        // res.status(200).json({ message: "The student edit form will render here.", student: student });
+        res.render('editstudent',{ student});
     }
 
 });
 
-router.put("/:studentId/", async function(req,res,next){
+router.post("/:studentId/", async function(req,res,next){
 
     const student = await putStudent(req,res);
 
