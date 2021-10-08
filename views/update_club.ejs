@@ -11,11 +11,10 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <%=club%>
+    <%= club %>
     
     <div class="container mt-5 pt-5">
-        <form action=<%= `/club/${club._id}` %> method="PUT">
-            <textarea style="display: none;" rows="2" type="text" class="form-control" id="info" name="_id"><%=club._id%></textarea>
+        <form action="/club/<%=club._id%>" id="form" method="POST" >
             <div class="form-group">
                 <label for="info">New Description</label>
                 <textarea rows="2" type="text" class="form-control" id="info" name="description"><%=club.description%></textarea>
@@ -23,7 +22,6 @@
             
             <div class="form-group">
                 <label for="achievements">Edit achievements</label>
-                <!-- <%=club.achievements%> -->
                     <textarea rows="2" type="text" class="form-control" id="achievements" name="achievements"></textarea>  
                 <% for(key in club.achievements){ %>
                     <textarea rows="2" type="text" class="form-control" id="achievements" name="achievements">
@@ -31,17 +29,9 @@
                     </textarea>
                 <%}%>
             </div>
-            
-            <!-- <div class="form-group">
-                <label for="events">Edit Events</label>
-                <textarea rows="2" type="text" class="form-control" id="events" name="events">{{events}}</textarea>
-            </div> -->
-            
-            
-            <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
         </div>
         <div class="container mt-5 pt-5">
-            <button type="submit" class="btn btn-primary ">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </div>
         
     </form>

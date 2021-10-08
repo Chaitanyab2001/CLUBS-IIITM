@@ -48,7 +48,7 @@ router.get("/:eventId/edit", async function(req,res,next){
 
 });
 
-router.put("/:eventId", async function(req,res,next) {
+router.post("/:eventId", async function(req,res,next) {
 
     const event = await putEvent(req,res);
 

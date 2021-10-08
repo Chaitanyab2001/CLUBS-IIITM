@@ -54,23 +54,6 @@ router.get("/:clubId", async function (req,res, next) {
     }
 });
 
-router.post("/", async function (req, res, next) {
-
-    const club = await postClub(req, res);
-
-    if (Object.prototype.toString.call(club) === "[object Error]") {
-        if ((club.status) < 500)
-            res.status(club.status).send(club.message);
-        else
-            next(club.message);
-    }
-    else {
-        res.setHeader("ContentType", "application/json");
-        res.status(200).json(club);
-    }
-
-});
-
 router.get("/:clubId/edit", async function(req,res,next){
 
     const club = await getClub(req,res);
@@ -79,7 +62,7 @@ router.get("/:clubId/edit", async function(req,res,next){
     {
         var err = new Error("You are not logged in.");
         err.status = 400;
-        res.status(err.status).send(err);
+        res.status(err.status).send(err.message);
         return ;
     }
 
@@ -107,7 +90,8 @@ router.get("/:clubId/edit", async function(req,res,next){
 
 });
 
-router.put("/:clubId", async function(req,res,next) {
+router.post("/:clubId", async function(req,res,next) {
+
     const club = await putClub(req,res);
 
     if(Object.prototype.toString.call(club) === "[object Error]")
