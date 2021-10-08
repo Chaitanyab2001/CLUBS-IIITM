@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import clubModel from "../models/clubs.js";
-import { getClub, postClub, putClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
+import { getClub, putClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
 import { postEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
 import { storage } from "../cloudinary/index.js";
@@ -108,7 +108,6 @@ router.post("/:clubId", async function(req,res,next) {
     }
 });
 
-
 router.get("/:clubId/event", async function (req, res, next) {
 
     if (req.session.passport === undefined) {
@@ -170,16 +169,15 @@ router.post("/:clubId/event", upload.single("banner"), async function (req, res,
 
 });
 
-
 router.get("/:clubId/approval", async function(req,res,next) {
 
     const approval = await postApproval(req, res);
 
     if (Object.prototype.toString.call(approval) === "[object Error]") {
         if ((approval.status) < 500)
-            res.status(approval.status).send(approval.message);
+        res.status(approval.status).send(approval.message);
         else
-            next(approval.message);
+        next(approval.message);
     }
     else {
         res.setHeader("ContentType", "application/json");
