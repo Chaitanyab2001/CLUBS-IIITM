@@ -26,7 +26,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="public/js/studentForm.js"></script>
+   
 
 </head>
 
@@ -88,7 +88,7 @@
                 <!-- Add Bio -->
                 <div class="form-group">
                     <label for="bio" class="form-label">Bio</label>
-                    <textarea class="form-control" rows="3" name="bio" id="bio" value="<%=student.bio%>"></textarea>
+                    <textarea type="text" class="form-control" rows="3" name="bio" id="bio" value="<%=student.bio%>"><%=student.bio%></textarea>
                 </div>
         
         
@@ -139,7 +139,7 @@
     <script src="/js/main.js"></script>
     <script src="/js/bootstrap-notify.min.js"></script>
     <script src="/js/notify.js"></script>
-
+    <script src="/js/studentForm.js"></script>
 
 </body>
 
