@@ -75,6 +75,14 @@ router.get("/:clubId/edit", async function(req,res,next){
 
     const club = await getClub(req,res);
 
+    if(req.session.passport === undefined)
+    {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        res.status(err.status).send(err);
+        return ;
+    }
+
     if(Object.prototype.toString.call(club) === "[object Error]")
     {
         if((club.status) < 500)
@@ -84,21 +92,22 @@ router.get("/:clubId/edit", async function(req,res,next){
     }
     else
     {
-        if(club.presidentid != req.session.passport.user)
+        if(club.presidentid._id != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
             res.status(error.status).send(error.message); 
+            return ;
         }
     
         res.setHeader("ContentType", "application/json");
-        res.status(200).json({ message: "The club edit form will render here.", club: club });
+        // res.status(200).json({ message: "The club edit form will render here.", club: club });
+        res.render('update_club.ejs',{ message: "The club edit form will render here.", club: club });
     }
 
 });
 
 router.put("/:clubId", async function(req,res,next) {
-
     const club = await putClub(req,res);
 
     if(Object.prototype.toString.call(club) === "[object Error]")
