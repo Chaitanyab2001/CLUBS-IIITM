@@ -6,9 +6,19 @@ import { postEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
 import { storage } from "../cloudinary/index.js";
 import multer from 'multer';
+import { usern, passw } from "../credentials.js"
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 const upload = multer({ storage });
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: usern,
+        pass: passw
+    }
+});
 
 router.get("/:clubId", async function (req,res, next) {
 
@@ -203,6 +213,16 @@ router.get("/:clubId/remove/:studentId", async function(req,res,next) {
         res.status(200).send("The member has been removed successfully.");
 
         // mail to member.
+        var mailOptions = {
+            from: usern,
+            to: decline.studentid.email,
+            subject: `Fired from ${decline.clubid.name}`,
+            text: `Thank you for being with us. Sorry ${decline.studentid.name}, you got fired from ${decline.clubid.name} Club.`
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            next(error);
+        });
     }
 
 });
