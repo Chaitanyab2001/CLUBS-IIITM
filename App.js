@@ -111,3 +111,9 @@ app.get("/auth/google/club",
   function (req, res) {
     res.redirect('/home');
   });
+
+  app.get('/logout', function (req, res){
+    req.session.destroy(function (err) {
+      res.redirect('/home'); //Inside a callback… bulletproof!
+    });
+  });
