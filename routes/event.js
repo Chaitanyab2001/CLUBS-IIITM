@@ -1,6 +1,6 @@
 import express from "express";
-import eventModel from "../models/events.js";
 import { getEvent, putEvent, delEvent } from "../controllers/events.js";
+import imageUpload from "../middleware/imageUpload.js";
 
 const router = express.Router();
 
@@ -48,7 +48,7 @@ router.get("/:eventId/edit", async function(req,res,next){
 
 });
 
-router.post("/:eventId", async function(req,res,next) {
+router.post("/:eventId", imageUpload.single("image"), async function(req,res,next) {
 
     const event = await putEvent(req,res);
 
