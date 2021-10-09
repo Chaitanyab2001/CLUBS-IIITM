@@ -28,7 +28,7 @@ export const getClub = async (req, res) => {
             const club = await clubModel.findOne({ _id: clubId })
                                         .populate("memberids", "name")
                                         .populate("presidentid", "name")
-                                        .populate("eventids", "name");
+                                        .populate("eventids", ["name", "image"]);
             return club;
 
         } catch (error) {
@@ -110,6 +110,22 @@ export const putClub = async (req, res) => {
         }
 
         try {
+            if(req.file != undefined)
+            {
+                if(club.image != undefined)
+                {
+                    var gfs;
+                    const conn = mongoose.connection;
+                    conn.once("open", () => {
+                        gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
+                    });
+
+                    await gfs.delete(new mongoose.Types.ObjectId(club.image));
+                }
+
+                body.image = req.file.id;
+            }
+
             await clubModel.updateOne({ _id: clubId }, body);
             return (await clubModel.findOne(body));
 
@@ -166,6 +182,16 @@ export const delClub = async (req, res) => {
         }
 
         try {
+            if(club.image != undefined)
+            {
+                var gfs;
+                const conn = mongoose.connection;
+                conn.once("open", () => {
+                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
+                });
+
+                await gfs.delete(new mongoose.Types.ObjectId(club.image));
+            }
             await clubModel.deleteOne({ _id: clubId });
             return body;
 

@@ -105,7 +105,11 @@ export const postEvent = async (req,res) => {
             return err;
         }
         try {
+            if(req.file != undefined)
+            newevent.image = req.file.id;
+
             await newevent.save();
+            
             try {
                 await clubModel.findOneAndUpdate({ _id: clubId }, { $push: { eventids: newevent._id } });
                 return newevent;
@@ -116,7 +120,7 @@ export const postEvent = async (req,res) => {
             }
         
         } catch (error) {
-            error.message = "Meetlink or Event name already exsists";
+            error.message = "Meetlink or Event name already exsists or Date entered is invalid.";
             return error;     
         }
     }
@@ -169,6 +173,22 @@ export const putEvent = async (req,res) => {
             return err;
         }
         try {
+            if(req.file != undefined)
+            {
+                if(event.image != undefined)
+                {
+                    var gfs;
+                    const conn = mongoose.connection;
+                    conn.once("open", () => {
+                        gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
+                    });
+
+                    await gfs.delete(new mongoose.Types.ObjectId(event.image));
+                }
+
+                req.body.image = req.file.id;
+            }
+
             await eventModel.updateOne({ _id: req.body._id }, req.body);
             return await eventModel.findOne(req.body);
         
@@ -224,8 +244,19 @@ export const delEvent = async (req,res) => {
             return err;
         }
         try {
+            if(event.image != undefined)
+            {
+                var gfs;
+                const conn = mongoose.connection;
+                conn.once("open", () => {
+                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
+                });
+
+                await gfs.delete(new mongoose.Types.ObjectId(event.image));
+            }
+
+            await clubModel.findByIdAndUpdate(club._id,{ $pull: { eventids: event._id } });
             await eventModel.deleteOne({ _id: eventId });
-            await clubModel.findByIdAndUpdate(club._id,{ $pull: { eventids: event._id } })
             return event;
         
         } catch (error) {

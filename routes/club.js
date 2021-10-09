@@ -4,19 +4,16 @@ import clubModel from "../models/clubs.js";
 import { getClub, putClub, removeMember, getJoinButton, getVerifyPresident } from "../controllers/clubs.js";
 import { postEvent } from "../controllers/events.js";
 import { getClubApprovals, postApproval } from "../controllers/approvals.js";
-import { storage } from "../cloudinary/index.js";
-import multer from 'multer';
-import { usern, passw } from "../credentials.js"
 import nodemailer from "nodemailer";
+import imageUpload from "../middleware/imageUpload.js";
 
 const router = express.Router();
-const upload = multer({ storage });
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: usern,
-        pass: passw
+        user: process.env.usern,
+        pass: process.env.passw
     }
 });
 
@@ -160,7 +157,7 @@ router.get("/:clubId/event", async function (req, res, next) {
     //res.status(200).send("The event creation form will render here.")
 });
 
-router.post("/:clubId/event", upload.single("banner"), async function (req, res, next) {
+router.post("/:clubId/event", imageUpload.single("image"), async function (req, res, next) {
 
     const event = await postEvent(req, res);
 
@@ -212,9 +209,8 @@ router.get("/:clubId/remove/:studentId", async function(req,res,next) {
         res.setHeader("ContentType", "application/json");
         res.status(200).send("The member has been removed successfully.");
 
-        // mail to member.
         var mailOptions = {
-            from: usern,
+            from: process.env.usern,
             to: decline.studentid.email,
             subject: `Fired from ${decline.clubid.name}`,
             text: `Thank you for being with us. Sorry ${decline.studentid.name}, you got fired from ${decline.clubid.name} Club.`
