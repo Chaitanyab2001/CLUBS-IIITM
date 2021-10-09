@@ -18,7 +18,8 @@ router.get("/:eventId", async function(req,res,next) {
     else
     {
         res.setHeader("ContentType", "application/json");
-        res.status(200).json(event);
+        res.status(200).render('events', { event });
+        //res.status(200).json(event);
     }
 });
 

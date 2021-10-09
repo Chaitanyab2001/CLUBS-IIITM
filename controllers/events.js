@@ -34,7 +34,7 @@ export const getEvent = async (req,res) => {
     {
         var err = new Error("The Event doesn't exsist.");
         err.status = 406;
-        res.status(error.status).send(error.message); 
+        return res.status(error.status).send(error.message); 
     }
 
     try {
@@ -93,6 +93,12 @@ export const postEvent = async (req,res) => {
         error.message("Unable to connect to database.");
         return error;
     }
+
+    // const dateobj = document.getElementById("date").value;
+    // const timeobj = document.getElementById("time").value;
+
+    req.body.date = new Date(req.body.date + " " + req.body.time);
+
 
     const newevent = new eventModel(req.body);
 
