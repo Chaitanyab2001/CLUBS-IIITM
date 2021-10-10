@@ -145,6 +145,7 @@ export const putEvent = async (req,res) => {
     }
     
     const { eventId } = req.params;
+    var body = req.body;
 
     if(!mongoose.Types.ObjectId.isValid(eventId))
     {
@@ -186,11 +187,11 @@ export const putEvent = async (req,res) => {
                     await gfs.delete(new mongoose.Types.ObjectId(event.image));
                 }
 
-                req.body.image = req.file.id;
+                body.image = req.file.id;
             }
             
-            await eventModel.updateOne({ _id: req.body._id }, req.body);
-            return await eventModel.findOne(req.body);
+            await eventModel.updateOne({ _id: eventId }, body);
+            return await eventModel.findOne(body);
         
         } catch (error) {
             error.message = "Meetlink or Event name already exsists or date entered is invalid.";

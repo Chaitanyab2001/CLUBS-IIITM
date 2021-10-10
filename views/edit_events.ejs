@@ -53,7 +53,7 @@
             <div class="divider-custom-line"></div>
         </div>
 
-        <form method="POST" action="/event/<%=event._id %>/">
+        <form method="POST" action="/event/<%=event._id %>/" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name" class="form-label">Name of Event</label>
                 <input type="text" class="form-control" id="name" name="name" value="<%=event.name%>" required>
