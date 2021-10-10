@@ -1,6 +1,7 @@
 import express from "express";
 import { getEvent, putEvent, delEvent } from "../controllers/events.js";
 import imageUpload from "../middleware/imageUpload.js";
+import clubModel from "../models/clubs.js";
 
 const router = express.Router();
 
@@ -17,13 +18,34 @@ router.get("/:eventId", async function(req,res,next) {
     }
     else
     {
+        var ispresident = false;
+        var club;
+        try {
+            club = await clubModel.findOne({ eventids: { $elemMatch: { $eq: event._id } } });
+            
+        } catch (error) {
+            return res.status(error.status).send(error.message);            
+        }
+
+        if(club.presidentid == req.session.passport.user)
+        {
+            ispresident = true;
+        }
+
+
         res.setHeader("ContentType", "application/json");
-        res.status(200).render('events', { event });
+        res.status(200).render('events', { event, ispresident });
         //res.status(200).json(event);
     }
 });
 
 router.get("/:eventId/edit", async function(req,res,next){
+
+    if (req.session.passport === undefined) {
+        var err = new Error("You are not logged in.");
+        err.status = 400;
+        return res.status(err.status).send(err.message);
+    }
 
     const event = await getEvent(req,res);
 
@@ -36,11 +58,19 @@ router.get("/:eventId/edit", async function(req,res,next){
     }
     else
     {
-        if(event.clubid.presidentid != req.session.passport.user)
+        var club;
+        try {
+            club = await clubModel.findOne({ eventids: { $elemMatch: { $eq: event._id } } });
+            
+        } catch (error) {
+            return res.status(error.status).send(error.message);            
+        }
+
+        if(club.presidentid != req.session.passport.user)
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
-            res.status(error.status).send(error.message); 
+            return res.status(err.status).send(err.message); 
         }
     
         res.setHeader("ContentType", "application/json");
@@ -67,7 +97,7 @@ router.post("/:eventId", imageUpload.single("image"), async function(req,res,nex
     }
 });
 
-router.delete("/:eventId", async function(req,res,next) {
+router.post("/:eventId/delete", async function(req,res,next) {
 
     const event = await delEvent(req,res);
 

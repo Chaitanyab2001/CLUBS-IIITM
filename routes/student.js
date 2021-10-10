@@ -6,6 +6,7 @@ const router = express.Router();
 router.get("/:studentId/profile", async function(req,res,next){
 
     const student = await getStudent(req,res);
+    var isCurrStudent = false;
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
@@ -16,9 +17,14 @@ router.get("/:studentId/profile", async function(req,res,next){
     }
     else
     {
+        if(student._id == req.session.passport.user)
+        {
+            isCurrStudent = true;
+        }
+
         res.setHeader("ContentType", "application/json");
         // res.status(200).json(student);
-        res.render('student',{ student});
+        res.render('student',{ student, isCurrStudent });
     }
 
 });
@@ -40,12 +46,12 @@ router.get("/:studentId/edit", async function(req,res,next){
         {
             var err = new Error("You are not authorized to edit this student.");
             err.status = 400;
-            res.status(error.status).send(error.message); 
+            return res.status(error.status).send(error.message); 
         }
     
         res.setHeader("ContentType", "application/json");
         // res.status(200).json({ message: "The student edit form will render here.", student: student });
-        res.render('editstudent',{ student});
+        res.render('editstudent',{ student });
     }
 
 });
@@ -69,7 +75,7 @@ router.post("/:studentId/", async function(req,res,next){
 
 });
 
-router.delete("/:studentId/", async function(req,res,next){
+router.post("/:studentId/delete", async function(req,res,next){
 
     const student = await delStudent(req,res);
 

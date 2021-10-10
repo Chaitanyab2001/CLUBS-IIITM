@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
     <title>
-        <%= event.name %>>
+        <%= event.name %>
     </title>
     <link rel="stylesheet" type="text/css"
         href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -26,22 +26,9 @@
             font-family: "Permanent Marker", cursive;
         }
     </style>
-
-    <!-- Custom stlylesheet -->
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-		<![endif]-->
 </head>
 
 <body>
-    <!-- <div class="col text-center">
-        <h1>TEST</h1>
-        <h2>TEST</h2>
-    </div> -->
 
     <h1 style="text-align: center;">Event Details</h1>
     <div class="container">
@@ -76,15 +63,26 @@
 
                 <div class="mt-4 h4">
                     <span class="font-weight-bold">Event Meetlink : </span>
-                    <a href="<%=event.meetlink%>">
+                    <a target="_blank" href="<%=event.meetlink%>">
                         <%=event.meetlink%>
                     </a>
                 </div>
             </div>
         </div>
-
+        <% if(ispresident) { %>
+            <div class="row">
+                <a href="<%=event._id%>/edit" class="mt-5 offset-md-5 col-md-2 btn btn-primary btn-lg">
+                    Edit Event
+                </a>
+                <form action="<%=event._id%>/delete" method="POST" class="mt-5 offset-md-5 col-md-2 ">
+                    <label for="submit" class="btn btn-danger btn-lg">
+                        Delete Event
+                    </label>
+                    <input type="submit" name="submit" id="submit" style="display: none">
+                </form>
+            </div>
+            <% } %>
     </div>
 </body>
-<!-- This templates was made by Colorlib (https://colorlib.com) -->
 
 </html>
