@@ -116,9 +116,7 @@ export const putClub = async (req, res) => {
                 {
                     var gfs;
                     const conn = mongoose.connection;
-                    conn.once("open", () => {
-                        gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
-                    });
+                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
 
                     await gfs.delete(new mongoose.Types.ObjectId(club.image));
                 }
@@ -186,9 +184,7 @@ export const delClub = async (req, res) => {
             {
                 var gfs;
                 const conn = mongoose.connection;
-                conn.once("open", () => {
-                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
-                });
+                gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
 
                 await gfs.delete(new mongoose.Types.ObjectId(club.image));
             }

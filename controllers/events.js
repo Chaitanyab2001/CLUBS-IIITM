@@ -94,11 +94,7 @@ export const postEvent = async (req,res) => {
         return error;
     }
 
-    // const dateobj = document.getElementById("date").value;
-    // const timeobj = document.getElementById("time").value;
-
     req.body.date = new Date(req.body.date + " " + req.body.time);
-
 
     const newevent = new eventModel(req.body);
 
@@ -185,9 +181,7 @@ export const putEvent = async (req,res) => {
                 {
                     var gfs;
                     const conn = mongoose.connection;
-                    conn.once("open", () => {
-                        gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
-                    });
+                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
 
                     await gfs.delete(new mongoose.Types.ObjectId(event.image));
                 }
@@ -199,7 +193,7 @@ export const putEvent = async (req,res) => {
             return await eventModel.findOne(req.body);
         
         } catch (error) {
-            error.message = "Meetlink or Event name already exsists";
+            // error.message = "Meetlink or Event name already exsists or date entered is invalid.";
             return error;
         }
     }
@@ -254,9 +248,7 @@ export const delEvent = async (req,res) => {
             {
                 var gfs;
                 const conn = mongoose.connection;
-                conn.once("open", () => {
-                    gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
-                });
+                gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
 
                 await gfs.delete(new mongoose.Types.ObjectId(event.image));
             }

@@ -17,12 +17,6 @@
         <div class="container">
             <a class="navbar-brand js-scroll-trigger" href="/home">Clubs<strong
                     style="color: #9CC3D5;">IIITM</strong></a>
-            <button
-                class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded"
-                type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
     </nav>
 
@@ -37,12 +31,6 @@
             <div class="divider-custom-line"></div>
         </div>
         <form action="/club/<%=club._id%>" id="form" method="POST" enctype="multipart/form-data">
-            <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)"
-                    style="display: none;"></p>
-            <p><label for="file" style="cursor: pointer;border: 2px solid red; padding: 5px; border-radius: 5px;">Upload
-                    Image</label></p>
-            <p><img id="output" width="200" /></p>
-
             <div class="form-group">
                 <label for="info">New Description</label>
                 <textarea rows="2" type="text" class="form-control" id="info"
@@ -65,20 +53,22 @@
             </svg>
             <br><br>
             <div class="form-group" id='main'>
-                <!-- <textarea rows="2" type="text" class="form-control" id="achievements" name="achievements"></textarea><br>   -->
                 <% for(key in club.achievements){ %>
                     <textarea rows="2" type="text" class="form-control" id="achievements"
                         name="achievements"><%=club.achievements[key]%></textarea><br id="br">
                     <%}%>
             </div>
+            <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)"
+                    style="display: none;"></p>
+            <p><label for="file" style="cursor: pointer;border: 2px solid red; padding: 5px; border-radius: 5px;">Upload
+                    Image</label></p>
+            <p><img id="output" width="600" src="/image/<%=club.image%>" /></p>
     </div>
     <div class="container mb-5">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 
     </form>
-    <!-- <button id='add' onclick=add()>+</button><button id='add' onclick=remove()>-</button> -->
-    <!-- <i class="bi bi-plus-square" id='add' onclick=add()></i> -->
     </div>
 
     <script>
