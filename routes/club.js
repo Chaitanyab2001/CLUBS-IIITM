@@ -86,7 +86,7 @@ router.get("/:clubId/edit", async function(req,res,next){
         {
             var err = new Error("You are not president of club.");
             err.status = 400;
-            res.status(error.status).send(error.message); 
+            res.status(err.status).send(err.message); 
             return ;
         }
     

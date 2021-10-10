@@ -83,7 +83,7 @@ export const putClub = async (req, res) => {
 
     if(!mongoose.Types.ObjectId.isValid(clubId))
     {
-        var err = new Error("The Club doesn't exsist.");
+        var err = new Error("The Club doesn't exist.");
         err.status = 406;
         return err;
     }
@@ -129,7 +129,7 @@ export const putClub = async (req, res) => {
 
         } catch (error) {
             error.status = 400;
-            error.message = "The club name already exsist.";
+            error.message = "The club name already exist.";
             return error;
         }
     }
