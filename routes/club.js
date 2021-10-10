@@ -97,7 +97,7 @@ router.get("/:clubId/edit", async function(req,res,next){
 
 });
 
-router.post("/:clubId", async function(req,res,next) {
+router.post("/:clubId", imageUpload.single("image"), async function(req,res,next) {
 
     const club = await putClub(req,res);
 
@@ -138,7 +138,7 @@ router.get("/:clubId/event", async function (req, res, next) {
 
     } catch (error) {
         error.message = "Unable to connect with database.";
-        res.status(error.status).send(error.message);
+        return res.status(error.status).send(error.message);
     }
 
     if (club === null) {
@@ -211,9 +211,9 @@ router.get("/:clubId/remove/:studentId", async function(req,res,next) {
 
         var mailOptions = {
             from: process.env.usern,
-            to: decline.studentid.email,
-            subject: `Fired from ${decline.clubid.name}`,
-            text: `Thank you for being with us. Sorry ${decline.studentid.name}, you got fired from ${decline.clubid.name} Club.`
+            to: member.studentid.email,
+            subject: `Fired from ${member.clubid.name}`,
+            text: `Thank you for being with us. Sorry ${member.studentid.name}, you got fired from ${member.clubid.name} Club.`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {

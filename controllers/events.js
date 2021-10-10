@@ -27,18 +27,18 @@ export const getEvent = async (req,res) => {
         
     } catch (error) {
         error.message = "Unable to connect with database.";
-        res.status(error.status).send(error.message);          
+        return error;     
     }
 
     if(eventt === null)
     {
         var err = new Error("The Event doesn't exsist.");
         err.status = 406;
-        return res.status(error.status).send(error.message); 
+        return err;
     }
 
     try {
-        const event = await eventModel.findOne({ _id: eventId});
+        const event = await eventModel.findOne({ _id: eventId });
         return event;
         
     } catch (error) {

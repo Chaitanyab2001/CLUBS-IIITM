@@ -47,7 +47,7 @@ export const getClub = async (req, res) => {
 export const getTechClubs = async (req, res) => {
 
     try {
-        const clubs = await clubModel.find({ typeofclub: "Technical" }, "name");
+        const clubs = await clubModel.find({ typeofclub: "Technical" }, ["name", "image"]);
         return clubs;
 
     } catch (error) {
@@ -60,7 +60,7 @@ export const getTechClubs = async (req, res) => {
 export const getCultClubs = async (req, res) => {
 
     try {
-        const clubs = await clubModel.find({ typeofclub: "Cultural" }, "name");
+        const clubs = await clubModel.find({ typeofclub: "Cultural" }, ["name", "image"]);
         return clubs;
 
     } catch (error) {
@@ -88,7 +88,7 @@ export const putClub = async (req, res) => {
         return err;
     }
 
-    const body = req.body;
+    var body = req.body;
     var club;
 
     try {
@@ -110,9 +110,9 @@ export const putClub = async (req, res) => {
         }
 
         try {
-            if(req.file != undefined)
+            if(!(req.file === undefined))
             {
-                if(club.image != undefined)
+                if(!(club.image === undefined))
                 {
                     var gfs;
                     const conn = mongoose.connection;
