@@ -74,7 +74,8 @@ router.get("/:eventId/edit", async function(req,res,next){
         }
     
         res.setHeader("ContentType", "application/json");
-        res.status(200).json({ message: "The event edit form will render here.", event: event });
+        // res.status(200).json({ message: "The event edit form will render here.", event: event });
+        res.status(200).render('edit_events',{ event: event });
     }
 
 });
