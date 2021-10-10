@@ -175,9 +175,9 @@ export const putEvent = async (req,res) => {
             return err;
         }
         try {
-            if(req.file != undefined)
+            if(!(req.file === undefined))
             {
-                if(event.image != undefined)
+                if(!(event.image === undefined))
                 {
                     var gfs;
                     const conn = mongoose.connection;
@@ -188,12 +188,12 @@ export const putEvent = async (req,res) => {
 
                 req.body.image = req.file.id;
             }
-
+            
             await eventModel.updateOne({ _id: req.body._id }, req.body);
             return await eventModel.findOne(req.body);
         
         } catch (error) {
-            // error.message = "Meetlink or Event name already exsists or date entered is invalid.";
+            error.message = "Meetlink or Event name already exsists or date entered is invalid.";
             return error;
         }
     }
