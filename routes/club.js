@@ -171,7 +171,7 @@ router.post("/:clubId/event", imageUpload.single("image"), async function (req, 
     else
     {
         res.setHeader("ContentType", "application/json");
-        res.status(200).json(event);
+        res.status(200).json({ message: "The Event is created Successfully. "});
     }
 
 });

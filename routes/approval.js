@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import nodemailer from "nodemailer";
 import approvalModel from "../models/approvals.js";
 import { approveApproval, declineApproval } from "../controllers/approvals.js";
-// import { usern, passw } from "../credentials.js"
 
 const router = express.Router();
 
@@ -34,7 +33,7 @@ router.get("/:approvalId/approve", async function (req, res, next) {
 
         var mailOptions =  
         {
-            from: usern,
+            from: process.env.usern,
             to: approve.studentid.email,
             subject: `WELCOME to ${approve.clubid.name} Club`,
             text: `Congratulations ${approve.studentid.name}, your approval for joining the ${approve.clubid.name} Club is approved.`
@@ -64,7 +63,7 @@ router.get("/:approvalId/decline", async function (req, res, next) {
         res.status(200).json({ message: "The Approval declined Successfully."});
 
         var mailOptions = {
-            from: usern,
+            from: process.env.usern,
             to: decline.studentid.email,
             subject: `Approval Declined`,
             text: `Sorry ${decline.studentid.name}, you approval for joining the ${decline.clubid.name} Club was declined.`
@@ -195,7 +194,7 @@ router.post("/:approvalId/meet", async function(req, res, next){
     }
 
     var mailOptions = {
-        from: usern,
+        from: process.env.usern,
         to: approval.studentid.email,
         bcc: req.user.email,
         subject: "Invitation to interview",
