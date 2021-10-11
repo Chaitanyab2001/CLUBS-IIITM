@@ -10,10 +10,11 @@ router.get("/:studentId/profile", async function(req,res,next){
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
-        if((student.status) < 500)
-        res.status(student.status).send(student.message);
-        else
-        next(student.message);
+        res.status(student.status)
+        req.flash("message", student.message );
+        req.flash("status", student.status);
+        res.redirect('back');
+        return ;
     }
     else
     {
@@ -22,9 +23,7 @@ router.get("/:studentId/profile", async function(req,res,next){
             isCurrStudent = true;
         }
 
-        res.setHeader("ContentType", "application/json");
-        // res.status(200).json(student);
-        res.render('student',{ student, isCurrStudent });
+        res.render('student',{ student, isCurrStudent, message: req.flash("message"), status: req.flash("status") });
     }
 
 });
@@ -35,10 +34,11 @@ router.get("/:studentId/edit", async function(req,res,next){
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
-        if((student.status) < 500)
-        res.status(student.status).send(student.message);
-        else
-        next(student.message);
+        res.status(student.status)
+        req.flash("message", student.message );
+        req.flash("status", student.status);
+        res.redirect('back');
+        return ;
     }
     else
     {
@@ -46,11 +46,13 @@ router.get("/:studentId/edit", async function(req,res,next){
         {
             var err = new Error("You are not authorized to edit this student.");
             err.status = 400;
-            return res.status(error.status).send(error.message); 
+            res.status(err.status)
+            req.flash("message", err.message );
+            req.flash("status", err.status);
+            res.redirect(`/student/${student._id}/profile`);
+            return ;
         }
     
-        res.setHeader("ContentType", "application/json");
-        // res.status(200).json({ message: "The student edit form will render here.", student: student });
         res.render('editstudent',{ student });
     }
 
@@ -62,16 +64,20 @@ router.post("/:studentId/", async function(req,res,next){
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
-        if((student.status) < 500)
-        res.status(student.status).send(student.message);
-        else
-        next(student.message);
+        res.status(student.status)
+        req.flash("message", student.message );
+        req.flash("status", student.status);
+        res.redirect('back');
+        return ;
     }
     else
     {
-        res.setHeader("ContentType", "application/json");
-        res.status(200).send("The student is updated successfully.");
+        res.status(200)
+        req.flash("message", "The student is updated successfully." );
+        req.flash("status", 200);
     }
+
+    res.redirect(`/student/${req.params.studentId}/profile`);
 
 });
 
@@ -81,16 +87,19 @@ router.post("/:studentId/delete", async function(req,res,next){
 
     if(Object.prototype.toString.call(student) === "[object Error]")
     {
-        if((student.status) < 500)
-        res.status(student.status).send(student.message);
-        else
-        next(student.message);
+        res.status(student.status)
+        req.flash("message", student.message );
+        req.flash("status", student.status);
+        res.redirect('back');
+        return ;
     }
     else
     {
-        res.setHeader("ContentType", "application/json");
-        res.status(200).send("The student is deleted successfully.");
+        res.status(200)
+        req.flash("message", "The student is deleted successfully." );
+        req.flash("status", 200);
     }
+    res.redirect(`/student/${req.params.studentId}/profile`);
 
 });
 
