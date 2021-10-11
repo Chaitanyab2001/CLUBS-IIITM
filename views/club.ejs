@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<body class="body-top">
+<body id="body-top">
 
     <nav class="navbar navbar-expand-lg bg-dark text-uppercase fixed-top" id="mainNav">
         <div class="container">
@@ -79,6 +79,20 @@
 
     <!-- Masthead-->
     <header class="masthead bg-primary text-white text-center" id="page-top">
+        <% if(message.length > 0) {%>
+        <div class="container fixed-top">
+            <% if(status == 200) {%>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%} else {%>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%}%>
+                <%= message%>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <%}%>
         <div class="container d-flex align-items-center flex-column">
             <!-- Masthead Avatar Image-->
 
@@ -271,13 +285,13 @@
             <!-- About Section Content-->
             <div class="row">
                 <div class="col-lg-4 ml-auto">
-                    <p class="pre-wrap lead" style="font-family: 'Ubuntu', sans-serif;">This is a website which will
+                    <div class="wrap lead" style="font-family: 'Ubuntu', sans-serif;">This is a website which will
                         ease the recruitment process for the clubs and moreover it will help them manage their
                         activities and also it will help club heads to modify the club database of their respective
-                        clubs.</p>
+                        clubs.</div>
                 </div>
-                <div class="col-lg-4 mr-auto">
-                    <p class="pre-wrap lead" style="font-family: 'Ubuntu', sans-serif;">This website will also help
+                <div class="col-lg-4 mr-auto mt-5 mt-lg-0">
+                    <p class="wrap lead" style="font-family: 'Ubuntu', sans-serif;">This website will also help
                         outsiders to know about clubs of IIITMG so that they can decide which club is better for them
                         according to their interests so that they can apply for it. </p>
                 </div>
