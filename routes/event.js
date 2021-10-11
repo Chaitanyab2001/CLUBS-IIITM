@@ -14,7 +14,7 @@ router.get("/:eventId", async function(req,res,next) {
         res.status(event.status)
         req.flash("message", event.message );
         req.flash("status", event.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -50,7 +50,7 @@ router.get("/:eventId/edit", async function(req,res,next){
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
 
@@ -61,7 +61,7 @@ router.get("/:eventId/edit", async function(req,res,next){
         res.status(event.status)
         req.flash("message", event.message );
         req.flash("status", event.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -104,7 +104,7 @@ router.post("/:eventId", imageUpload.single("image"), async function(req,res,nex
         res.status(event.status)
         req.flash("message", event.message );
         req.flash("status", event.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -126,7 +126,7 @@ router.post("/:eventId/delete", async function(req,res,next) {
         res.status(event.status)
         req.flash("message", event.message );
         req.flash("status", event.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -136,7 +136,7 @@ router.post("/:eventId/delete", async function(req,res,next) {
         req.flash("status", 200);
     }
 
-    res.redirect(`/event/${event._id}`);
+    res.redirect("/home");
 });
 
 export default router;
