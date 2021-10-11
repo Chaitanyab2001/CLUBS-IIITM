@@ -24,7 +24,7 @@ router.get("/:approvalId/approve", async function (req, res, next) {
         res.status(approve.status)
         req.flash("message", approve.message );
         req.flash("status", approve.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else 
@@ -63,7 +63,7 @@ router.get("/:approvalId/decline", async function (req, res, next) {
         res.status(decline.status)
         req.flash("message", decline.message );
         req.flash("status", decline.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else 
@@ -101,7 +101,7 @@ router.get("/:approvalId/meet", async function (req, res, next) {
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
 
@@ -114,7 +114,7 @@ router.get("/:approvalId/meet", async function (req, res, next) {
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     var approval;
@@ -129,7 +129,7 @@ router.get("/:approvalId/meet", async function (req, res, next) {
         res.status(error.status)
         req.flash("message", error.message );
         req.flash("status", error.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;      
     }
 
@@ -140,7 +140,7 @@ router.get("/:approvalId/meet", async function (req, res, next) {
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     
@@ -167,7 +167,7 @@ router.post("/:approvalId/meet", async function(req, res, next){
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
 
@@ -180,7 +180,7 @@ router.post("/:approvalId/meet", async function(req, res, next){
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
 
@@ -211,7 +211,7 @@ router.post("/:approvalId/meet", async function(req, res, next){
         res.status(error.status)
         req.flash("message", error.message );
         req.flash("status", error.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;     
     }
 
@@ -222,7 +222,7 @@ router.post("/:approvalId/meet", async function(req, res, next){
         res.status(err.status)
         req.flash("message", err.message );
         req.flash("status", err.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     
