@@ -64,6 +64,10 @@ conn.once("open", () => {
     gfs = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "Images" });
 });
 
+app.get("/", (req,res) => {
+  res.redirect("/home");
+});
+
 app.get("/image/:imageId", async (req,res) => {
     try {
       const readStream = await gfs.openDownloadStream(new mongoose.Types.ObjectId(req.params.imageId));
@@ -127,11 +131,15 @@ app.get("/auth/google",
 app.get("/auth/google/club",
   passport.authenticate('google', { failureRedirect: '/home' }),
   function (req, res) {
+    req.flash("status", 200);
+    req.flash("message", "You have logged in successfully.")
     res.redirect('/home');
   });
 
   app.get('/logout', function (req, res){
     req.session.destroy(function (err) {
-      res.redirect('/home'); //Inside a callback… bulletproof!
+      req.flash("status", 200);
+      req.flash("message", "You have logged out successfully.")
+      res.redirect('/home');
     });
   });
