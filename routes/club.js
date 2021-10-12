@@ -203,7 +203,7 @@ router.post("/:clubId/event", imageUpload.single("image"), async function (req, 
 
 });
 
-router.get("/:clubId/approval", async function(req,res,next) {
+router.post("/:clubId/approval", async function(req,res,next) {
 
     const approval = await postApproval(req, res);
 
@@ -224,7 +224,7 @@ router.get("/:clubId/approval", async function(req,res,next) {
 
 });
 
-router.get("/:clubId/remove/:studentId", async function(req,res,next) {
+router.post("/:clubId/remove/:studentId", async function(req,res,next) {
 
     const member = await removeMember(req,res);
 
@@ -242,9 +242,9 @@ router.get("/:clubId/remove/:studentId", async function(req,res,next) {
 
         var mailOptions = {
             from: process.env.usern,
-            to: member.studentid.email,
-            subject: `Fired from ${member.clubid.name}`,
-            text: `Thank you for being with us. Sorry ${member.studentid.name}, you got fired from ${member.clubid.name} Club.`
+            to: member.student.email,
+            subject: `Fired from ${member.club.name}`,
+            text: `Thank you for being with us. Sorry ${member.student.name}, you got fired from ${member.club.name} Club.`
         };
 
         transporter.sendMail(mailOptions, function (error, info) {

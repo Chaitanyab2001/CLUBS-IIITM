@@ -273,7 +273,7 @@ export const removeMember = async (req,res) => {
 
         try {
             await clubModel.updateOne({ _id: clubId }, { $pull: { memberids: studentId }});
-            return;
+            return  { student, club };
 
         } catch (error) {
             error.message = "Unable to connect with database.";
