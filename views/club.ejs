@@ -79,39 +79,42 @@
 
     <!-- Masthead-->
     <header class="masthead bg-primary text-white text-center" id="page-top">
-        <% if(message.length > 0) {%>
-        <div class="container fixed-top">
-            <% if(status == 200) {%>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%} else {%>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%}%>
-                <%= locals.message%>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-        <%}%>
-        <div class="container d-flex align-items-center flex-column">
-            <!-- Masthead Avatar Image-->
+        <% if(message.length> 0) {%>
+            <div class="container fixed-top">
+                <% if(status==200) {%>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <%} else {%>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <%}%>
+                                    <%= locals.message%>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                            </div>
+                    </div>
+                    <%}%>
+                        <div class="container d-flex align-items-center flex-column">
+                            <!-- Masthead Avatar Image-->
 
-            <img class="masthead-avatar mb-5" src="/image/<%=club.image%>" alt="not found" />
-            <!-- Masthead Heading-->
+                            <img class="masthead-avatar mb-5" src="/image/<%=club.image%>" alt="not found" />
+                            <!-- Masthead Heading-->
 
-            <h1 class="masthead-heading text-uppercase mb-0" style="font-family: 'Kaushan Script', cursive;">
-                <%=club.name%>
-            </h1>
-            <!-- Icon Divider-->
-            <div class="divider-custom divider-light">
-                <div class="divider-custom-line"></div>
-                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                <div class="divider-custom-line"></div>
-            </div>
-            <% if(joinbutton) { %>
-                <a class="btn btn-success" href="<%=club._id%>/approval">JOIN</a>
-                <% }%>
-        </div>
+                            <h1 class="masthead-heading text-uppercase mb-0"
+                                style="font-family: 'Kaushan Script', cursive;">
+                                <%=club.name%>
+                            </h1>
+                            <!-- Icon Divider-->
+                            <div class="divider-custom divider-light">
+                                <div class="divider-custom-line"></div>
+                                <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                                <div class="divider-custom-line"></div>
+                            </div>
+                            <% if(joinbutton) { %>
+                                <form action="<%=club._id%>/approval" method="POST">
+                                    <button type="submit" class="btn btn-success">JOIN</button>
+                                </form>
+                                <% }%>
+                        </div>
     </header>
 
     <!-- Description Section-->
@@ -223,8 +226,9 @@
                             <%= member[key].name%>
                         </a>
                         <% if(verifypresident) { %>
-                            <a class="btn btn-danger col-sm-2 offset-md-2 "
-                                href="<%=club._id%>/remove/<%=member[key]._id%>">Remove</a>
+                            <form action="<%=club._id%>/remove/<%=member[key]._id%>" method="POST">
+                            <button class="btn btn-danger">Remove</button>
+                        </form>
                             <% } %>
                     </li>
                     <% } %>

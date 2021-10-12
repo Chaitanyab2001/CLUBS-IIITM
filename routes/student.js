@@ -13,7 +13,7 @@ router.get("/:studentId/profile", async function(req,res,next){
         res.status(student.status)
         req.flash("message", student.message );
         req.flash("status", student.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -37,7 +37,7 @@ router.get("/:studentId/edit", async function(req,res,next){
         res.status(student.status)
         req.flash("message", student.message );
         req.flash("status", student.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -67,7 +67,7 @@ router.post("/:studentId/", async function(req,res,next){
         res.status(student.status)
         req.flash("message", student.message );
         req.flash("status", student.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -90,7 +90,7 @@ router.post("/:studentId/delete", async function(req,res,next){
         res.status(student.status)
         req.flash("message", student.message );
         req.flash("status", student.status);
-        res.redirect('back');
+        res.redirect("/home");
         return ;
     }
     else
@@ -99,7 +99,7 @@ router.post("/:studentId/delete", async function(req,res,next){
         req.flash("message", "The student is deleted successfully." );
         req.flash("status", 200);
     }
-    res.redirect(`/student/${req.params.studentId}/profile`);
+    res.redirect("/home");
 
 });
 
